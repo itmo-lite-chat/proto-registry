@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package users_service.users.v1;
+
+option go_package = "users_service/users/v1;usersv1";
+
+import "users_service/users/v1/models.proto";
+
+// Users service
+service UsersService {
+  // Create a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+  // Get user by ID
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+}
+
+message CreateUserRequest {
+}
+
+message CreateUserResponse {
+}
+
+message GetUserByIDRequest {
+  string user_id = 1;
+}
+
+message GetUserByIDResponse {
+  User user = 1;
+}
