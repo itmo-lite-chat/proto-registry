@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package messages_service.messages.v1;
+
+option go_package = "messages_service/messages/v1;messagesv1";
+
+import "google/protobuf/timestamp.proto";
+
+message Message {
+  string id = 1;
+  string chat_id = 2;
+  string sender_id = 3;
+  
+  message Content {
+    string type = 1; // t (text), i (image), f (file), s (sticker)
+    string body = 2;
+    map<string, string> metadata = 3; // file_size, duration и т.д.
+  }
+  Content content = 4;
+
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6; // null в БД -> default в proto
+  google.protobuf.Timestamp deleted_at = 7;
+  
+  string reply_to = 8; // ID родительского сообщения
+  int64 version = 9;
+}

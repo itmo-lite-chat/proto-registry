@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package chats_service.chats.v1;
+
+option go_package = "chats_service/chats/v1;chatsv1";
+
+import "chats_service/chats/v1/models.proto";
+
+service ChatsService {
+  // Создание нового чата (приватного или группового)
+  // При создании сразу добавляются записи в chat_members
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+
+  // Получение списка чатов конкретного пользователя
+  rpc GetUserChats(GetUserChatsRequest) returns (GetUserChatsResponse);
+
+  // Получение детальной информации о чате и его участниках
+  rpc GetChatDetails(GetChatDetailsRequest) returns (GetChatDetailsResponse);
+
+  // Метод для обновления статуса прочитанного
+  rpc UpdateLastReadMessage(UpdateLastReadMessageRequest) returns (UpdateLastReadMessageResponse);
+}
+
+message CreateChatRequest {
+  string type = 1; // private / group /TODO: enum
+  repeated string participant_ids = 2;
+  string title = 3; // опционально для групп
+  string owner_id = 4;
+}
+
+message CreateChatResponse {
+  Chat chat = 1;
+}
+
+message GetUserChatsRequest {
+  string user_id = 1;
+}
+
+message GetUserChatsResponse {
+  repeated Chat chats = 1;
+}
+
+message GetChatDetailsRequest {
+  string chat_id = 1;
+}
+
+message GetChatDetailsResponse {
+  Chat chat = 1;
+  repeated ChatMember members = 2;
+}
+
+message UpdateLastReadMessageRequest {
+  string chat_id = 1;
+  string user_id = 2;
+  string last_read_message_id = 3;
+}
+
+message UpdateLastReadMessageResponse {}

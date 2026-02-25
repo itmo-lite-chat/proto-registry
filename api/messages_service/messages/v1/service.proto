@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package messages_service.messages.v1;
+option go_package = "messages_service/messages/v1;messagesv1";
+
+import "messages_service/messages/v1/models.proto";
+
+service MessagesService {
+  // Отправка сообщения (сохранение в MongoDB)
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  
+  // Получение истории
+  rpc GetChatHistory(GetChatHistoryRequest) returns (GetChatHistoryResponse);
+  
+  // Получить количество сообщений в чате после определенного ID (последнего прочитанного)
+  rpc GetUnreadCount(GetUnreadCountRequest) returns (GetUnreadCountResponse);
+
+  // Редактирование сообщения (обновляет body и updated_at)
+  rpc EditMessage(EditMessageRequest) returns (EditMessageResponse);
+
+  // Удаление сообщения (soft delete через deleted_at)
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+
+}
+
+message SendMessageRequest {
+  string chat_id = 1;
+  string sender_id = 2;
+  Message.Content content = 3;
+  string reply_to = 4; // ID сообщения, на которое отвечаем
+}
+
+message SendMessageResponse {
+  Message message = 1;
+}
+
+message GetChatHistoryRequest {
+  string chat_id = 1;
+}
+
+message GetChatHistoryResponse {
+  repeated Message messages = 1;
+}
+
+message GetUnreadCountRequest {
+  string chat_id = 1;
+  string last_read_message_id = 2;
+}
+
+message GetUnreadCountResponse {
+  int32 unread_count = 1;
+}
+
+message EditMessageRequest {
+  string message_id = 1;
+  string sender_id = 2; // TODO: убрать
+  string new_body = 3;
+}
+
+message EditMessageResponse {
+  Message message = 1;
+}
+
+message DeleteMessageRequest {
+  string message_id = 1;
+  string user_id = 2;
+}
+
+message DeleteMessageResponse {}

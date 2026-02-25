@@ -6,25 +6,55 @@ option go_package = "users_service/users/v1;usersv1";
 
 import "users_service/users/v1/models.proto";
 
-// Users service
 service UsersService {
-  // Create a new user
+  // Регистрация
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 
-  // Get user by ID
+  // Получение одного пользователя (для экрана профиля)
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+
+  // МАССОВЫЙ запрос пользователей (для Gateway)
+  // Чтобы не ходить в базу за каждым пользователем отдельно
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  // Поиск пользователей (для начала нового чата)
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
 }
 
 message CreateUserRequest {
+    string username = 1;
+    string login = 2;
+    string email = 3;
+    optional string avatar_url = 4;
 }
 
 message CreateUserResponse {
+  User user = 1;
 }
 
 message GetUserByIDRequest {
-  string user_id = 1;
+  string id = 1; 
 }
 
 message GetUserByIDResponse {
   User user = 1;
+}
+
+message ListUsersRequest {
+  repeated string user_ids = 1;
+}
+
+message ListUsersResponse {
+  // id -> User
+  map<string, User> users = 1;
+}
+
+message SearchUsersRequest {
+  string query = 1; // поиск по login или username
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message SearchUsersResponse {
+  repeated User users = 1;
 }

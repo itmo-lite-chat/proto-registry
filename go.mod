@@ -1,4 +1,4 @@
-module github.com/ITKS777/proto-registry
+module github.com/itmo-lite-chat/proto-registry.git
 
 go 1.25.5
 
