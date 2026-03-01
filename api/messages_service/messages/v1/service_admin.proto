@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package messages_service.messages.v1;
+
+option go_package = "messages_service/messages/v1;messagesv1";

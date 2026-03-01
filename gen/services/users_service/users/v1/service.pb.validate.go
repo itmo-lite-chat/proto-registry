@@ -57,6 +57,16 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Username
+
+	// no validation rules for Login
+
+	// no validation rules for Email
+
+	if m.AvatarUrl != nil {
+		// no validation rules for AvatarUrl
+	}
+
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
 	}
@@ -158,6 +168,35 @@ func (m *CreateUserResponse) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateUserResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateUserResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateUserResponseValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return CreateUserResponseMultiError(errors)
@@ -261,7 +300,7 @@ func (m *GetUserByIDRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserId
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return GetUserByIDRequestMultiError(errors)
@@ -473,3 +512,251 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserByIDResponseValidationError{}
+
+// Validate checks the field values on SerchUsersRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SerchUsersRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SerchUsersRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SerchUsersRequestMultiError, or nil if none found.
+func (m *SerchUsersRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SerchUsersRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Query
+
+	// no validation rules for Login
+
+	// no validation rules for Offset
+
+	// no validation rules for Limit
+
+	if len(errors) > 0 {
+		return SerchUsersRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SerchUsersRequestMultiError is an error wrapping multiple validation errors
+// returned by SerchUsersRequest.ValidateAll() if the designated constraints
+// aren't met.
+type SerchUsersRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SerchUsersRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SerchUsersRequestMultiError) AllErrors() []error { return m }
+
+// SerchUsersRequestValidationError is the validation error returned by
+// SerchUsersRequest.Validate if the designated constraints aren't met.
+type SerchUsersRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SerchUsersRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SerchUsersRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SerchUsersRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SerchUsersRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SerchUsersRequestValidationError) ErrorName() string {
+	return "SerchUsersRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SerchUsersRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSerchUsersRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SerchUsersRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SerchUsersRequestValidationError{}
+
+// Validate checks the field values on SerchUsersResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SerchUsersResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SerchUsersResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SerchUsersResponseMultiError, or nil if none found.
+func (m *SerchUsersResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SerchUsersResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SerchUsersResponseValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SerchUsersResponseValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SerchUsersResponseValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for Count
+
+	if len(errors) > 0 {
+		return SerchUsersResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// SerchUsersResponseMultiError is an error wrapping multiple validation errors
+// returned by SerchUsersResponse.ValidateAll() if the designated constraints
+// aren't met.
+type SerchUsersResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SerchUsersResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SerchUsersResponseMultiError) AllErrors() []error { return m }
+
+// SerchUsersResponseValidationError is the validation error returned by
+// SerchUsersResponse.Validate if the designated constraints aren't met.
+type SerchUsersResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SerchUsersResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SerchUsersResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SerchUsersResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SerchUsersResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SerchUsersResponseValidationError) ErrorName() string {
+	return "SerchUsersResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SerchUsersResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSerchUsersResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SerchUsersResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SerchUsersResponseValidationError{}

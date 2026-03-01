@@ -9,6 +9,7 @@ package usersv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -22,7 +23,19 @@ const (
 )
 
 type User struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UUID пользователя
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Отображаемое имя пользователя
+	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	// Логин для аутентификации
+	Login string `protobuf:"bytes,3,opt,name=login,proto3" json:"login,omitempty"`
+	// Электронная почта пользователя
+	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	// Ссылка на изображение профиля
+	AvatarUrl *string `protobuf:"bytes,5,opt,name=avatar_url,json=avatarUrl,proto3,oneof" json:"avatar_url,omitempty"`
+	// Дата и время регистрации пользователя
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -57,12 +70,63 @@ func (*User) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_models_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *User) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *User) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *User) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *User) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *User) GetAvatarUrl() string {
+	if x != nil && x.AvatarUrl != nil {
+		return *x.AvatarUrl
+	}
+	return ""
+}
+
+func (x *User) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
 var File_users_service_users_v1_models_proto protoreflect.FileDescriptor
 
 const file_users_service_users_v1_models_proto_rawDesc = "" +
 	"\n" +
-	"#users_service/users/v1/models.proto\x12\x16users_service.users.v1\"\x06\n" +
-	"\x04UserB\xbf\x01\n" +
+	"#users_service/users/v1/models.proto\x12\x16users_service.users.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcc\x01\n" +
+	"\x04User\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05login\x18\x03 \x01(\tR\x05login\x12\x14\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email\x12\"\n" +
+	"\n" +
+	"avatar_url\x18\x05 \x01(\tH\x00R\tavatarUrl\x88\x01\x01\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\r\n" +
+	"\v_avatar_urlB\xbf\x01\n" +
 	"\x1acom.users_service.users.v1B\vModelsProtoP\x01Z\x1eusers_service/users/v1;usersv1\xa2\x02\x03UUX\xaa\x02\x15UsersService.Users.V1\xca\x02\x15UsersService\\Users\\V1\xe2\x02!UsersService\\Users\\V1\\GPBMetadata\xea\x02\x17UsersService::Users::V1b\x06proto3"
 
 var (
@@ -79,14 +143,16 @@ func file_users_service_users_v1_models_proto_rawDescGZIP() []byte {
 
 var file_users_service_users_v1_models_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_users_service_users_v1_models_proto_goTypes = []any{
-	(*User)(nil), // 0: users_service.users.v1.User
+	(*User)(nil),                  // 0: users_service.users.v1.User
+	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
 }
 var file_users_service_users_v1_models_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: users_service.users.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_users_service_users_v1_models_proto_init() }
@@ -94,6 +160,7 @@ func file_users_service_users_v1_models_proto_init() {
 	if File_users_service_users_v1_models_proto != nil {
 		return
 	}
+	file_users_service_users_v1_models_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

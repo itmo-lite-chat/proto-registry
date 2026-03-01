@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package messages_service.messages.v1;
+
+option go_package = "messages_service/messages/v1;messagesv1";
+
+import "google/protobuf/timestamp.proto";
+
+// Тип контента
+enum ContentType {
+  CONTENT_TYPE_UNSPECIFIED = 0;
+  // Текстовое сообщение
+  CONTENT_TYPE_TEXT = 1;
+  // Изображение
+  CONTENT_TYPE_IMAGE = 2;
+  // Файл
+  CONTENT_TYPE_FILE = 3;
+  // Стикер
+  CONTENT_TYPE_STICKER = 4;
+}
+
+// Данные сообщения
+message Content {
+  // Тип контента
+  ContentType type = 1;
+  // Основное содержимое
+  string body = 2;
+  // Дополнительные параметры: file_size, duration, width, height и т.д.
+  map<string, string> metadata = 3; //TODO: убрать метадату и добавить поля
+}
+
+message Message {
+  // ID сообщения
+  int64 message_id = 1;
+  // UUID чата
+  string chat_id = 2;
+  // ID пользователя-отправителя
+  string sender_id = 3;
+
+  // Контент сообщения
+  Content content = 4;
+
+  // Время создания сообщения
+  google.protobuf.Timestamp created_at = 5;
+  // Время последнего редактирования
+  google.protobuf.Timestamp updated_at = 6;
+  // Время удаления
+  google.protobuf.Timestamp deleted_at = 7;
+  
+  // UUID сообщения, на которое ответил пользователь
+  string reply_to_id = 8;
+}

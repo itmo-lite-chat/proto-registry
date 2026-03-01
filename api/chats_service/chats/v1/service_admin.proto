@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package chats_service.chats.v1;
+
+option go_package = "chats_service/chats/v1;chatsv1";

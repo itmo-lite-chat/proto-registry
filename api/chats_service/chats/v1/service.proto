@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package chats_service.chats.v1;
+
+option go_package = "chats_service/chats/v1;chatsv1";
+
+import "chats_service/chats/v1/models.proto";
+
+service ChatsService {
+  // Создать чат
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+
+  // Получение списка чатов
+  rpc ListUserChats(ListUserChatsRequest) returns (ListUserChatsResponse);
+
+  // Получение детальной информации о чате и его участниках
+  rpc GetChatDetails(GetChatDetailsRequest) returns (GetChatDetailsResponse);
+
+  // Метод для обновления статуса прочитанного
+  rpc UpdateLastReadMessage(UpdateLastReadMessageRequest) returns (UpdateLastReadMessageResponse);
+}
+
+message CreateChatRequest {
+  // Тип создаваемого чата
+  ChatType type = 1;
+  // UUID пользователей
+  repeated string participant_ids = 2;
+  // Название чата (обязательно для групп)
+  optional string title = 3;
+  // UUID пользователя, который создает чат
+  string owner_id = 4;
+}
+
+message CreateChatResponse {
+  // Созданный чат
+  Chat chat = 1;
+}
+
+message ListUserChatsRequest {
+  // UUID пользователя
+  string user_id = 1;
+}
+
+message ListUserChatsResponse {
+  // Список всех чатов пользователя
+  repeated Chat chats = 1;
+}
+
+message GetChatDetailsRequest {
+  // UUID чата
+  string chat_id = 1;
+}
+
+message GetChatDetailsResponse {
+  // Чат
+  Chat chat = 1;
+  // Список участников чата
+  repeated ChatMember members = 2;
+}
+
+message UpdateLastReadMessageRequest {
+  // UUID чата
+  string chat_id = 1;
+  // UUID пользователя
+  string user_id = 2;
+  // UUID сообщения, которое теперь считается последним
+  string last_read_message_id = 3;
+}
+
+message UpdateLastReadMessageResponse {}

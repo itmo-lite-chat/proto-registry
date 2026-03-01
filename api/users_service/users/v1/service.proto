@@ -6,25 +6,63 @@ option go_package = "users_service/users/v1;usersv1";
 
 import "users_service/users/v1/models.proto";
 
-// Users service
 service UsersService {
-  // Create a new user
+  // Создание пользователя
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 
-  // Get user by ID
+  // Получение информации о пользователе
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+
+  // Получение списка пользователей
+  rpc SerchUsers(SerchUsersRequest) returns (SerchUsersResponse);
 }
 
 message CreateUserRequest {
+  // Имя пользователя
+  string username = 1;
+  // Логин для входа в систему
+  string login = 2;
+  // Email пользователя
+  string email = 3;
+  // Ссылка на изображение профиля
+  optional string avatar_url = 4;
 }
 
 message CreateUserResponse {
+  // Пользователь
+  User user = 1;
 }
 
 message GetUserByIDRequest {
-  string user_id = 1;
+  // UUID пользователя
+  string id = 1; 
 }
 
 message GetUserByIDResponse {
+  // Данные пользователя
   User user = 1;
+}
+
+message SerchUsersRequest {
+  // Поиск по подстроке (login или username) — полнотекстовый
+  string query = 1;
+  
+  // Получение конкретных пользователей по списку их UUID
+  repeated string user_ids = 2;
+  
+  // Точный поиск по логину
+  string login = 3;
+
+  // Смещение для пагинации
+  int32 offset = 4;
+  // Количество записей на страницу
+  int32 limit = 5;
+}
+
+message SerchUsersResponse {
+  // Список найденных пользователей
+  repeated User users = 1;
+  
+  // Общее количество записей, подходящих под фильтр
+  int32 count = 2;
 }

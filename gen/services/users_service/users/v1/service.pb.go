@@ -22,7 +22,15 @@ const (
 )
 
 type CreateUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Имя пользователя
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	// Логин для входа в систему
+	Login string `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
+	// Email пользователя
+	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	// Ссылка на изображение профиля
+	AvatarUrl     *string `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3,oneof" json:"avatar_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -57,8 +65,38 @@ func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *CreateUserRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetAvatarUrl() string {
+	if x != nil && x.AvatarUrl != nil {
+		return *x.AvatarUrl
+	}
+	return ""
+}
+
 type CreateUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Пользователь
+	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -93,9 +131,17 @@ func (*CreateUserResponse) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *CreateUserResponse) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 type GetUserByIDRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UUID пользователя
+	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,16 +176,17 @@ func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetUserByIDRequest) GetUserId() string {
+func (x *GetUserByIDRequest) GetId() string {
 	if x != nil {
-		return x.UserId
+		return x.Id
 	}
 	return ""
 }
 
 type GetUserByIDResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Данные пользователя
+	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -181,21 +228,174 @@ func (x *GetUserByIDResponse) GetUser() *User {
 	return nil
 }
 
+type SerchUsersRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Поиск по подстроке (login или username) — полнотекстовый
+	Query string `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	// Получение конкретных пользователей по списку их UUID
+	UserIds []string `protobuf:"bytes,2,rep,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
+	// Точный поиск по логину
+	Login string `protobuf:"bytes,3,opt,name=login,proto3" json:"login,omitempty"`
+	// Смещение для пагинации
+	Offset int32 `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	// Количество записей на страницу
+	Limit         int32 `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SerchUsersRequest) Reset() {
+	*x = SerchUsersRequest{}
+	mi := &file_users_service_users_v1_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SerchUsersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SerchUsersRequest) ProtoMessage() {}
+
+func (x *SerchUsersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_users_service_users_v1_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SerchUsersRequest.ProtoReflect.Descriptor instead.
+func (*SerchUsersRequest) Descriptor() ([]byte, []int) {
+	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *SerchUsersRequest) GetQuery() string {
+	if x != nil {
+		return x.Query
+	}
+	return ""
+}
+
+func (x *SerchUsersRequest) GetUserIds() []string {
+	if x != nil {
+		return x.UserIds
+	}
+	return nil
+}
+
+func (x *SerchUsersRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *SerchUsersRequest) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *SerchUsersRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type SerchUsersResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Список найденных пользователей
+	Users []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	// Общее количество записей, подходящих под фильтр
+	Count         int32 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SerchUsersResponse) Reset() {
+	*x = SerchUsersResponse{}
+	mi := &file_users_service_users_v1_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SerchUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SerchUsersResponse) ProtoMessage() {}
+
+func (x *SerchUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_users_service_users_v1_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SerchUsersResponse.ProtoReflect.Descriptor instead.
+func (*SerchUsersResponse) Descriptor() ([]byte, []int) {
+	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *SerchUsersResponse) GetUsers() []*User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+func (x *SerchUsersResponse) GetCount() int32 {
+	if x != nil {
+		return x.Count
+	}
+	return 0
+}
+
 var File_users_service_users_v1_service_proto protoreflect.FileDescriptor
 
 const file_users_service_users_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"$users_service/users/v1/service.proto\x12\x16users_service.users.v1\x1a#users_service/users/v1/models.proto\"\x13\n" +
-	"\x11CreateUserRequest\"\x14\n" +
-	"\x12CreateUserResponse\"-\n" +
-	"\x12GetUserByIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"G\n" +
+	"$users_service/users/v1/service.proto\x12\x16users_service.users.v1\x1a#users_service/users/v1/models.proto\"\x8e\x01\n" +
+	"\x11CreateUserRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
+	"\x05login\x18\x02 \x01(\tR\x05login\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\"\n" +
+	"\n" +
+	"avatar_url\x18\x04 \x01(\tH\x00R\tavatarUrl\x88\x01\x01B\r\n" +
+	"\v_avatar_url\"F\n" +
+	"\x12CreateUserResponse\x120\n" +
+	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user\"$\n" +
+	"\x12GetUserByIDRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"G\n" +
 	"\x13GetUserByIDResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user2\xdb\x01\n" +
+	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user\"\x88\x01\n" +
+	"\x11SerchUsersRequest\x12\x14\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\x12\x19\n" +
+	"\buser_ids\x18\x02 \x03(\tR\auserIds\x12\x14\n" +
+	"\x05login\x18\x03 \x01(\tR\x05login\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x05R\x06offset\x12\x14\n" +
+	"\x05limit\x18\x05 \x01(\x05R\x05limit\"^\n" +
+	"\x12SerchUsersResponse\x122\n" +
+	"\x05users\x18\x01 \x03(\v2\x1c.users_service.users.v1.UserR\x05users\x12\x14\n" +
+	"\x05count\x18\x02 \x01(\x05R\x05count2\xc0\x02\n" +
 	"\fUsersService\x12c\n" +
 	"\n" +
 	"CreateUser\x12).users_service.users.v1.CreateUserRequest\x1a*.users_service.users.v1.CreateUserResponse\x12f\n" +
-	"\vGetUserByID\x12*.users_service.users.v1.GetUserByIDRequest\x1a+.users_service.users.v1.GetUserByIDResponseB\xc0\x01\n" +
+	"\vGetUserByID\x12*.users_service.users.v1.GetUserByIDRequest\x1a+.users_service.users.v1.GetUserByIDResponse\x12c\n" +
+	"\n" +
+	"SerchUsers\x12).users_service.users.v1.SerchUsersRequest\x1a*.users_service.users.v1.SerchUsersResponseB\xc0\x01\n" +
 	"\x1acom.users_service.users.v1B\fServiceProtoP\x01Z\x1eusers_service/users/v1;usersv1\xa2\x02\x03UUX\xaa\x02\x15UsersService.Users.V1\xca\x02\x15UsersService\\Users\\V1\xe2\x02!UsersService\\Users\\V1\\GPBMetadata\xea\x02\x17UsersService::Users::V1b\x06proto3"
 
 var (
@@ -210,25 +410,31 @@ func file_users_service_users_v1_service_proto_rawDescGZIP() []byte {
 	return file_users_service_users_v1_service_proto_rawDescData
 }
 
-var file_users_service_users_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_users_service_users_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_users_service_users_v1_service_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),   // 0: users_service.users.v1.CreateUserRequest
 	(*CreateUserResponse)(nil),  // 1: users_service.users.v1.CreateUserResponse
 	(*GetUserByIDRequest)(nil),  // 2: users_service.users.v1.GetUserByIDRequest
 	(*GetUserByIDResponse)(nil), // 3: users_service.users.v1.GetUserByIDResponse
-	(*User)(nil),                // 4: users_service.users.v1.User
+	(*SerchUsersRequest)(nil),   // 4: users_service.users.v1.SerchUsersRequest
+	(*SerchUsersResponse)(nil),  // 5: users_service.users.v1.SerchUsersResponse
+	(*User)(nil),                // 6: users_service.users.v1.User
 }
 var file_users_service_users_v1_service_proto_depIdxs = []int32{
-	4, // 0: users_service.users.v1.GetUserByIDResponse.user:type_name -> users_service.users.v1.User
-	0, // 1: users_service.users.v1.UsersService.CreateUser:input_type -> users_service.users.v1.CreateUserRequest
-	2, // 2: users_service.users.v1.UsersService.GetUserByID:input_type -> users_service.users.v1.GetUserByIDRequest
-	1, // 3: users_service.users.v1.UsersService.CreateUser:output_type -> users_service.users.v1.CreateUserResponse
-	3, // 4: users_service.users.v1.UsersService.GetUserByID:output_type -> users_service.users.v1.GetUserByIDResponse
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	6, // 0: users_service.users.v1.CreateUserResponse.user:type_name -> users_service.users.v1.User
+	6, // 1: users_service.users.v1.GetUserByIDResponse.user:type_name -> users_service.users.v1.User
+	6, // 2: users_service.users.v1.SerchUsersResponse.users:type_name -> users_service.users.v1.User
+	0, // 3: users_service.users.v1.UsersService.CreateUser:input_type -> users_service.users.v1.CreateUserRequest
+	2, // 4: users_service.users.v1.UsersService.GetUserByID:input_type -> users_service.users.v1.GetUserByIDRequest
+	4, // 5: users_service.users.v1.UsersService.SerchUsers:input_type -> users_service.users.v1.SerchUsersRequest
+	1, // 6: users_service.users.v1.UsersService.CreateUser:output_type -> users_service.users.v1.CreateUserResponse
+	3, // 7: users_service.users.v1.UsersService.GetUserByID:output_type -> users_service.users.v1.GetUserByIDResponse
+	5, // 8: users_service.users.v1.UsersService.SerchUsers:output_type -> users_service.users.v1.SerchUsersResponse
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_users_service_users_v1_service_proto_init() }
@@ -237,13 +443,14 @@ func file_users_service_users_v1_service_proto_init() {
 		return
 	}
 	file_users_service_users_v1_models_proto_init()
+	file_users_service_users_v1_service_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_users_service_users_v1_service_proto_rawDesc), len(file_users_service_users_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
