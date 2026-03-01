@@ -6,19 +6,52 @@ option go_package = "chats_service/chats/v1;chatsv1";
 
 import "google/protobuf/timestamp.proto";
 
+// Тип чата: определяет логику взаимодействия участников
+enum ChatType {
+  CHAT_TYPE_UNSPECIFIED = 0;
+  // Чат между двумя пользователями
+  CHAT_TYPE_PRIVATE = 1;
+  // Групповой чат с неограниченным количеством участников
+  CHAT_TYPE_GROUP = 2;
+}
+
+// Роль пользователя внутри конкретного чата
+enum MemberRole {
+  MEMBER_ROLE_UNSPECIFIED = 0;
+  // Создатель чата с полными правами управления
+  MEMBER_ROLE_OWNER = 1;
+  // Администратор (может модерировать участников)
+  MEMBER_ROLE_ADMIN = 2;
+  // Обычный участник чата
+  MEMBER_ROLE_MEMBER = 3;
+}
+
+// Основная сущность чата
 message Chat {
+  // Уникальный идентификатор чата (UUID)
   string id = 1;
-  string type = 2; // private/group
+  // Тип чата (private/group)
+  ChatType type = 2;
+  // Заголовок чата (для групп)
   string title = 3;
+  // ID пользователя-создателя
   string owner_id = 4;
+  // Краткий текст последнего сообщения для предпросмотра в списке
   string last_message_preview = 5;
+  // Время создания чата
   google.protobuf.Timestamp created_at = 6;
 }
 
+// Связующая сущность между чатом и пользователем
 message ChatMember {
+  // Идентификатор чата
   string chat_id = 1;
+  // Идентификатор пользователя
   string user_id = 2;
-  string role = 3;
+  // Уровень доступа пользователя в этом чате
+  MemberRole role = 3;
+  // Время вступления пользователя в чат
   google.protobuf.Timestamp joined_at = 4;
-  string last_read_message_id = 5; // С твоей схемы
+  // ID последнего прочитанного сообщения этим пользователем
+  string last_read_message_id = 5;
 }

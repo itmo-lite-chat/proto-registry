@@ -7,8 +7,7 @@ option go_package = "chats_service/chats/v1;chatsv1";
 import "chats_service/chats/v1/models.proto";
 
 service ChatsService {
-  // Создание нового чата (приватного или группового)
-  // При создании сразу добавляются записи в chat_members
+  // При создании чата(приватного или группового) сразу добавляются записи в chat_members
   rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
 
   // Получение списка чатов конкретного пользователя
@@ -22,36 +21,49 @@ service ChatsService {
 }
 
 message CreateChatRequest {
-  string type = 1; // private / group /TODO: enum
+  // Тип создаваемого чата
+  ChatType type = 1;
+  // Список ID пользователей, которые станут участниками чата
   repeated string participant_ids = 2;
-  string title = 3; // опционально для групп
+  // Название чата (обязательно для групп, для лички - не нужно)
+  optional string title = 3;
+  // ID пользователя, который создает чат и станет его владельцем
   string owner_id = 4;
 }
 
 message CreateChatResponse {
+  // Объект созданного чата с присвоенным ID и системными полями
   Chat chat = 1;
 }
 
 message GetUserChatsRequest {
+  // ID пользователя, для которого нужно загрузить список чатов
   string user_id = 1;
 }
 
 message GetUserChatsResponse {
+  // Список всех чатов, в которых состоит данный пользователь
   repeated Chat chats = 1;
 }
 
 message GetChatDetailsRequest {
+  // Уникальный ID запрашиваемого чата
   string chat_id = 1;
 }
 
 message GetChatDetailsResponse {
+  // Информация о чате (тип, название, последнее сообщение)
   Chat chat = 1;
+  // Полный список участников чата с их ролями и статусом прочтения
   repeated ChatMember members = 2;
 }
 
 message UpdateLastReadMessageRequest {
+  // ID чата, в котором обновляется статус прочтения
   string chat_id = 1;
+  // ID пользователя, который прочел сообщение
   string user_id = 2;
+  // ID сообщения, которое теперь считается последним прочитанным для этого юзера
   string last_read_message_id = 3;
 }
 

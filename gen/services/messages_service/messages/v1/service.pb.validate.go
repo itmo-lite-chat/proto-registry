@@ -59,8 +59,6 @@ func (m *SendMessageRequest) validate(all bool) error {
 
 	// no validation rules for ChatId
 
-	// no validation rules for SenderId
-
 	if all {
 		switch v := interface{}(m.GetContent()).(type) {
 		case interface{ ValidateAll() error }:

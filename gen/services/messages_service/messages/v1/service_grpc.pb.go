@@ -32,7 +32,7 @@ const (
 type MessagesServiceClient interface {
 	// Отправка сообщения (сохранение в MongoDB)
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
-	// Получение истории
+	// Получение истории переписки чата
 	GetChatHistory(ctx context.Context, in *GetChatHistoryRequest, opts ...grpc.CallOption) (*GetChatHistoryResponse, error)
 	// Получить количество сообщений в чате после определенного ID (последнего прочитанного)
 	GetUnreadCount(ctx context.Context, in *GetUnreadCountRequest, opts ...grpc.CallOption) (*GetUnreadCountResponse, error)
@@ -106,7 +106,7 @@ func (c *messagesServiceClient) DeleteMessage(ctx context.Context, in *DeleteMes
 type MessagesServiceServer interface {
 	// Отправка сообщения (сохранение в MongoDB)
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
-	// Получение истории
+	// Получение истории переписки чата
 	GetChatHistory(context.Context, *GetChatHistoryRequest) (*GetChatHistoryResponse, error)
 	// Получить количество сообщений в чате после определенного ID (последнего прочитанного)
 	GetUnreadCount(context.Context, *GetUnreadCountRequest) (*GetUnreadCountResponse, error)

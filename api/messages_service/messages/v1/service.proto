@@ -9,7 +9,7 @@ service MessagesService {
   // Отправка сообщения (сохранение в MongoDB)
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
   
-  // Получение истории
+  // Получение истории переписки чата
   rpc GetChatHistory(GetChatHistoryRequest) returns (GetChatHistoryResponse);
   
   // Получить количество сообщений в чате после определенного ID (последнего прочитанного)
@@ -24,45 +24,59 @@ service MessagesService {
 }
 
 message SendMessageRequest {
+  // ID чата, в который отправляется сообщение
   string chat_id = 1;
-  string sender_id = 2;
-  Message.Content content = 3;
-  string reply_to = 4; // ID сообщения, на которое отвечаем
+  // Контент сообщения (текст, медиа и тд)
+  Message.Content content = 2;
+  // ID сообщения, на которое отвечаем (опционально)
+  string reply_to = 3;
 }
 
 message SendMessageResponse {
+  // Сообщение с ID и временем создания
   Message message = 1;
 }
 
 message GetChatHistoryRequest {
+  // ID чата для загрузки истории
   string chat_id = 1;
 }
 
 message GetChatHistoryResponse {
+  // Список сообщений чата, отсортированный по времени
   repeated Message messages = 1;
 }
 
 message GetUnreadCountRequest {
+  // Идентификатор чата
   string chat_id = 1;
+  // ID последнего прочитанного сообщения, от которого пойдет отсчет
   string last_read_message_id = 2;
 }
 
 message GetUnreadCountResponse {
+  // Количество непрочитанных сообщений
   int32 unread_count = 1;
 }
 
 message EditMessageRequest {
+  // ID редактируемого сообщения
   string message_id = 1;
-  string sender_id = 2; // TODO: убрать
+  // ID отправителя для проверки прав доступа
+  string sender_id = 2; 
+  // Новое содержание сообщения
   string new_body = 3;
 }
 
 message EditMessageResponse {
+  // Обновленный объект сообщения
   Message message = 1;
 }
 
 message DeleteMessageRequest {
+  // ID удаляемого сообщения
   string message_id = 1;
+  // ID пользователя, который удаляет
   string user_id = 2;
 }
 

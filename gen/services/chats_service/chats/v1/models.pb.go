@@ -22,16 +22,131 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Тип чата: определяет логику взаимодействия участников
+type ChatType int32
+
+const (
+	ChatType_CHAT_TYPE_UNSPECIFIED ChatType = 0
+	// Чат между двумя пользователями
+	ChatType_CHAT_TYPE_PRIVATE ChatType = 1
+	// Групповой чат с неограниченным количеством участников
+	ChatType_CHAT_TYPE_GROUP ChatType = 2
+)
+
+// Enum value maps for ChatType.
+var (
+	ChatType_name = map[int32]string{
+		0: "CHAT_TYPE_UNSPECIFIED",
+		1: "CHAT_TYPE_PRIVATE",
+		2: "CHAT_TYPE_GROUP",
+	}
+	ChatType_value = map[string]int32{
+		"CHAT_TYPE_UNSPECIFIED": 0,
+		"CHAT_TYPE_PRIVATE":     1,
+		"CHAT_TYPE_GROUP":       2,
+	}
+)
+
+func (x ChatType) Enum() *ChatType {
+	p := new(ChatType)
+	*p = x
+	return p
+}
+
+func (x ChatType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ChatType) Descriptor() protoreflect.EnumDescriptor {
+	return file_chats_service_chats_v1_models_proto_enumTypes[0].Descriptor()
+}
+
+func (ChatType) Type() protoreflect.EnumType {
+	return &file_chats_service_chats_v1_models_proto_enumTypes[0]
+}
+
+func (x ChatType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ChatType.Descriptor instead.
+func (ChatType) EnumDescriptor() ([]byte, []int) {
+	return file_chats_service_chats_v1_models_proto_rawDescGZIP(), []int{0}
+}
+
+// Роль пользователя внутри конкретного чата
+type MemberRole int32
+
+const (
+	MemberRole_MEMBER_ROLE_UNSPECIFIED MemberRole = 0
+	// Создатель чата с полными правами управления
+	MemberRole_MEMBER_ROLE_OWNER MemberRole = 1
+	// Администратор (может модерировать участников)
+	MemberRole_MEMBER_ROLE_ADMIN MemberRole = 2
+	// Обычный участник чата
+	MemberRole_MEMBER_ROLE_MEMBER MemberRole = 3
+)
+
+// Enum value maps for MemberRole.
+var (
+	MemberRole_name = map[int32]string{
+		0: "MEMBER_ROLE_UNSPECIFIED",
+		1: "MEMBER_ROLE_OWNER",
+		2: "MEMBER_ROLE_ADMIN",
+		3: "MEMBER_ROLE_MEMBER",
+	}
+	MemberRole_value = map[string]int32{
+		"MEMBER_ROLE_UNSPECIFIED": 0,
+		"MEMBER_ROLE_OWNER":       1,
+		"MEMBER_ROLE_ADMIN":       2,
+		"MEMBER_ROLE_MEMBER":      3,
+	}
+)
+
+func (x MemberRole) Enum() *MemberRole {
+	p := new(MemberRole)
+	*p = x
+	return p
+}
+
+func (x MemberRole) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (MemberRole) Descriptor() protoreflect.EnumDescriptor {
+	return file_chats_service_chats_v1_models_proto_enumTypes[1].Descriptor()
+}
+
+func (MemberRole) Type() protoreflect.EnumType {
+	return &file_chats_service_chats_v1_models_proto_enumTypes[1]
+}
+
+func (x MemberRole) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use MemberRole.Descriptor instead.
+func (MemberRole) EnumDescriptor() ([]byte, []int) {
+	return file_chats_service_chats_v1_models_proto_rawDescGZIP(), []int{1}
+}
+
+// Основная сущность чата
 type Chat struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	Id                 string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Type               string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // private/group
-	Title              string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	OwnerId            string                 `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	LastMessagePreview string                 `protobuf:"bytes,5,opt,name=last_message_preview,json=lastMessagePreview,proto3" json:"last_message_preview,omitempty"`
-	CreatedAt          *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Уникальный идентификатор чата (UUID)
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Тип чата (private/group)
+	Type ChatType `protobuf:"varint,2,opt,name=type,proto3,enum=chats_service.chats.v1.ChatType" json:"type,omitempty"`
+	// Заголовок чата (для групп)
+	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	// ID пользователя-создателя
+	OwnerId string `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	// Краткий текст последнего сообщения для предпросмотра в списке
+	LastMessagePreview string `protobuf:"bytes,5,opt,name=last_message_preview,json=lastMessagePreview,proto3" json:"last_message_preview,omitempty"`
+	// Время создания чата
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Chat) Reset() {
@@ -71,11 +186,11 @@ func (x *Chat) GetId() string {
 	return ""
 }
 
-func (x *Chat) GetType() string {
+func (x *Chat) GetType() ChatType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return ChatType_CHAT_TYPE_UNSPECIFIED
 }
 
 func (x *Chat) GetTitle() string {
@@ -106,13 +221,19 @@ func (x *Chat) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// Связующая сущность между чатом и пользователем
 type ChatMember struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	ChatId            string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	UserId            string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Role              string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"`
-	JoinedAt          *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=joined_at,json=joinedAt,proto3" json:"joined_at,omitempty"`
-	LastReadMessageId string                 `protobuf:"bytes,5,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"` // С твоей схемы
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Идентификатор чата
+	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	// Идентификатор пользователя
+	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// Уровень доступа пользователя в этом чате
+	Role MemberRole `protobuf:"varint,3,opt,name=role,proto3,enum=chats_service.chats.v1.MemberRole" json:"role,omitempty"`
+	// Время вступления пользователя в чат
+	JoinedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=joined_at,json=joinedAt,proto3" json:"joined_at,omitempty"`
+	// ID последнего прочитанного сообщения этим пользователем
+	LastReadMessageId string `protobuf:"bytes,5,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -161,11 +282,11 @@ func (x *ChatMember) GetUserId() string {
 	return ""
 }
 
-func (x *ChatMember) GetRole() string {
+func (x *ChatMember) GetRole() MemberRole {
 	if x != nil {
 		return x.Role
 	}
-	return ""
+	return MemberRole_MEMBER_ROLE_UNSPECIFIED
 }
 
 func (x *ChatMember) GetJoinedAt() *timestamppb.Timestamp {
@@ -186,22 +307,32 @@ var File_chats_service_chats_v1_models_proto protoreflect.FileDescriptor
 
 const file_chats_service_chats_v1_models_proto_rawDesc = "" +
 	"\n" +
-	"#chats_service/chats/v1/models.proto\x12\x16chats_service.chats.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc8\x01\n" +
+	"#chats_service/chats/v1/models.proto\x12\x16chats_service.chats.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xea\x01\n" +
 	"\x04Chat\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04type\x18\x02 \x01(\tR\x04type\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x124\n" +
+	"\x04type\x18\x02 \x01(\x0e2 .chats_service.chats.v1.ChatTypeR\x04type\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12\x19\n" +
 	"\bowner_id\x18\x04 \x01(\tR\aownerId\x120\n" +
 	"\x14last_message_preview\x18\x05 \x01(\tR\x12lastMessagePreview\x129\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xbc\x01\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xe0\x01\n" +
 	"\n" +
 	"ChatMember\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x12\n" +
-	"\x04role\x18\x03 \x01(\tR\x04role\x127\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x126\n" +
+	"\x04role\x18\x03 \x01(\x0e2\".chats_service.chats.v1.MemberRoleR\x04role\x127\n" +
 	"\tjoined_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bjoinedAt\x12/\n" +
-	"\x14last_read_message_id\x18\x05 \x01(\tR\x11lastReadMessageIdB\xbf\x01\n" +
+	"\x14last_read_message_id\x18\x05 \x01(\tR\x11lastReadMessageId*Q\n" +
+	"\bChatType\x12\x19\n" +
+	"\x15CHAT_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11CHAT_TYPE_PRIVATE\x10\x01\x12\x13\n" +
+	"\x0fCHAT_TYPE_GROUP\x10\x02*o\n" +
+	"\n" +
+	"MemberRole\x12\x1b\n" +
+	"\x17MEMBER_ROLE_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11MEMBER_ROLE_OWNER\x10\x01\x12\x15\n" +
+	"\x11MEMBER_ROLE_ADMIN\x10\x02\x12\x16\n" +
+	"\x12MEMBER_ROLE_MEMBER\x10\x03B\xbf\x01\n" +
 	"\x1acom.chats_service.chats.v1B\vModelsProtoP\x01Z\x1echats_service/chats/v1;chatsv1\xa2\x02\x03CCX\xaa\x02\x15ChatsService.Chats.V1\xca\x02\x15ChatsService\\Chats\\V1\xe2\x02!ChatsService\\Chats\\V1\\GPBMetadata\xea\x02\x17ChatsService::Chats::V1b\x06proto3"
 
 var (
@@ -216,20 +347,25 @@ func file_chats_service_chats_v1_models_proto_rawDescGZIP() []byte {
 	return file_chats_service_chats_v1_models_proto_rawDescData
 }
 
+var file_chats_service_chats_v1_models_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_chats_service_chats_v1_models_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_chats_service_chats_v1_models_proto_goTypes = []any{
-	(*Chat)(nil),                  // 0: chats_service.chats.v1.Chat
-	(*ChatMember)(nil),            // 1: chats_service.chats.v1.ChatMember
-	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
+	(ChatType)(0),                 // 0: chats_service.chats.v1.ChatType
+	(MemberRole)(0),               // 1: chats_service.chats.v1.MemberRole
+	(*Chat)(nil),                  // 2: chats_service.chats.v1.Chat
+	(*ChatMember)(nil),            // 3: chats_service.chats.v1.ChatMember
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_chats_service_chats_v1_models_proto_depIdxs = []int32{
-	2, // 0: chats_service.chats.v1.Chat.created_at:type_name -> google.protobuf.Timestamp
-	2, // 1: chats_service.chats.v1.ChatMember.joined_at:type_name -> google.protobuf.Timestamp
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: chats_service.chats.v1.Chat.type:type_name -> chats_service.chats.v1.ChatType
+	4, // 1: chats_service.chats.v1.Chat.created_at:type_name -> google.protobuf.Timestamp
+	1, // 2: chats_service.chats.v1.ChatMember.role:type_name -> chats_service.chats.v1.MemberRole
+	4, // 3: chats_service.chats.v1.ChatMember.joined_at:type_name -> google.protobuf.Timestamp
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_chats_service_chats_v1_models_proto_init() }
@@ -242,13 +378,14 @@ func file_chats_service_chats_v1_models_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chats_service_chats_v1_models_proto_rawDesc), len(file_chats_service_chats_v1_models_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      2,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_chats_service_chats_v1_models_proto_goTypes,
 		DependencyIndexes: file_chats_service_chats_v1_models_proto_depIdxs,
+		EnumInfos:         file_chats_service_chats_v1_models_proto_enumTypes,
 		MessageInfos:      file_chats_service_chats_v1_models_proto_msgTypes,
 	}.Build()
 	File_chats_service_chats_v1_models_proto = out.File

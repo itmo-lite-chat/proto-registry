@@ -59,9 +59,11 @@ func (m *CreateChatRequest) validate(all bool) error {
 
 	// no validation rules for Type
 
-	// no validation rules for Title
-
 	// no validation rules for OwnerId
+
+	if m.Title != nil {
+		// no validation rules for Title
+	}
 
 	if len(errors) > 0 {
 		return CreateChatRequestMultiError(errors)

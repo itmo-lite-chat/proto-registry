@@ -22,17 +22,86 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Тип контента, определяющий способ отображения сообщения на клиенте
+type ContentType int32
+
+const (
+	ContentType_CONTENT_TYPE_UNSPECIFIED ContentType = 0
+	// Обычное текстовое сообщение
+	ContentType_CONTENT_TYPE_TEXT ContentType = 1
+	// Изображение (ссылка в body, размеры в metadata)
+	ContentType_CONTENT_TYPE_IMAGE ContentType = 2
+	// Произвольный файл
+	ContentType_CONTENT_TYPE_FILE ContentType = 3
+	// Стикер
+	ContentType_CONTENT_TYPE_STICKER ContentType = 4
+)
+
+// Enum value maps for ContentType.
+var (
+	ContentType_name = map[int32]string{
+		0: "CONTENT_TYPE_UNSPECIFIED",
+		1: "CONTENT_TYPE_TEXT",
+		2: "CONTENT_TYPE_IMAGE",
+		3: "CONTENT_TYPE_FILE",
+		4: "CONTENT_TYPE_STICKER",
+	}
+	ContentType_value = map[string]int32{
+		"CONTENT_TYPE_UNSPECIFIED": 0,
+		"CONTENT_TYPE_TEXT":        1,
+		"CONTENT_TYPE_IMAGE":       2,
+		"CONTENT_TYPE_FILE":        3,
+		"CONTENT_TYPE_STICKER":     4,
+	}
+)
+
+func (x ContentType) Enum() *ContentType {
+	p := new(ContentType)
+	*p = x
+	return p
+}
+
+func (x ContentType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ContentType) Descriptor() protoreflect.EnumDescriptor {
+	return file_messages_service_messages_v1_models_proto_enumTypes[0].Descriptor()
+}
+
+func (ContentType) Type() protoreflect.EnumType {
+	return &file_messages_service_messages_v1_models_proto_enumTypes[0]
+}
+
+func (x ContentType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ContentType.Descriptor instead.
+func (ContentType) EnumDescriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0}
+}
+
 type Message struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ChatId        string                 `protobuf:"bytes,2,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	SenderId      string                 `protobuf:"bytes,3,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	Content       *Message_Content       `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // null в БД -> default в proto
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
-	ReplyTo       string                 `protobuf:"bytes,8,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"` // ID родительского сообщения
-	Version       int64                  `protobuf:"varint,9,opt,name=version,proto3" json:"version,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Уникальный ID сообщения (UUID)
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// ID чата, к которому относится сообщение
+	ChatId string `protobuf:"bytes,2,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	// ID пользователя-отправителя
+	SenderId string `protobuf:"bytes,3,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// Контент сообщения
+	Content *Message_Content `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	// Время создания сообщения
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// Время последнего редактирования (если 0 — сообщение не редактировалось)
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// Время удаления. Если установлено — сообщение считается удаленным
+	DeletedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	// ID сообщения, на которое ответил пользователь
+	ReplyTo string `protobuf:"bytes,8,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
+	// Версия сообщения для оптимистичных блокировок или отслеживания правок
+	Version       int64 `protobuf:"varint,9,opt,name=version,proto3" json:"version,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,11 +199,15 @@ func (x *Message) GetVersion() int64 {
 	return 0
 }
 
+// Вложенная структура с данными сообщения
 type Message_Content struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // t (text), i (image), f (file), s (sticker)
-	Body          string                 `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // file_size, duration и т.д.
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Тип контента (текст, фото и т.д.)
+	Type ContentType `protobuf:"varint,1,opt,name=type,proto3,enum=messages_service.messages.v1.ContentType" json:"type,omitempty"`
+	// Основное содержимое
+	Body string `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
+	// Дополнительные параметры: file_size, duration, width, height и т.д.
+	Metadata      map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,11 +242,11 @@ func (*Message_Content) Descriptor() ([]byte, []int) {
 	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0, 0}
 }
 
-func (x *Message_Content) GetType() string {
+func (x *Message_Content) GetType() ContentType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return ContentType_CONTENT_TYPE_UNSPECIFIED
 }
 
 func (x *Message_Content) GetBody() string {
@@ -194,7 +267,7 @@ var File_messages_service_messages_v1_models_proto protoreflect.FileDescriptor
 
 const file_messages_service_messages_v1_models_proto_rawDesc = "" +
 	"\n" +
-	")messages_service/messages/v1/models.proto\x12\x1cmessages_service.messages.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc8\x04\n" +
+	")messages_service/messages/v1/models.proto\x12\x1cmessages_service.messages.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf3\x04\n" +
 	"\aMessage\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\achat_id\x18\x02 \x01(\tR\x06chatId\x12\x1b\n" +
@@ -207,14 +280,20 @@ const file_messages_service_messages_v1_models_proto_rawDesc = "" +
 	"\n" +
 	"deleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x12\x19\n" +
 	"\breply_to\x18\b \x01(\tR\areplyTo\x12\x18\n" +
-	"\aversion\x18\t \x01(\x03R\aversion\x1a\xc7\x01\n" +
-	"\aContent\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x12\x12\n" +
+	"\aversion\x18\t \x01(\x03R\aversion\x1a\xf2\x01\n" +
+	"\aContent\x12=\n" +
+	"\x04type\x18\x01 \x01(\x0e2).messages_service.messages.v1.ContentTypeR\x04type\x12\x12\n" +
 	"\x04body\x18\x02 \x01(\tR\x04body\x12W\n" +
 	"\bmetadata\x18\x03 \x03(\v2;.messages_service.messages.v1.Message.Content.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xe6\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*\x8b\x01\n" +
+	"\vContentType\x12\x1c\n" +
+	"\x18CONTENT_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11CONTENT_TYPE_TEXT\x10\x01\x12\x16\n" +
+	"\x12CONTENT_TYPE_IMAGE\x10\x02\x12\x15\n" +
+	"\x11CONTENT_TYPE_FILE\x10\x03\x12\x18\n" +
+	"\x14CONTENT_TYPE_STICKER\x10\x04B\xe6\x01\n" +
 	" com.messages_service.messages.v1B\vModelsProtoP\x01Z'messages_service/messages/v1;messagesv1\xa2\x02\x03MMX\xaa\x02\x1bMessagesService.Messages.V1\xca\x02\x1bMessagesService\\Messages\\V1\xe2\x02'MessagesService\\Messages\\V1\\GPBMetadata\xea\x02\x1dMessagesService::Messages::V1b\x06proto3"
 
 var (
@@ -229,24 +308,27 @@ func file_messages_service_messages_v1_models_proto_rawDescGZIP() []byte {
 	return file_messages_service_messages_v1_models_proto_rawDescData
 }
 
+var file_messages_service_messages_v1_models_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_messages_service_messages_v1_models_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_messages_service_messages_v1_models_proto_goTypes = []any{
-	(*Message)(nil),               // 0: messages_service.messages.v1.Message
-	(*Message_Content)(nil),       // 1: messages_service.messages.v1.Message.Content
-	nil,                           // 2: messages_service.messages.v1.Message.Content.MetadataEntry
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(ContentType)(0),              // 0: messages_service.messages.v1.ContentType
+	(*Message)(nil),               // 1: messages_service.messages.v1.Message
+	(*Message_Content)(nil),       // 2: messages_service.messages.v1.Message.Content
+	nil,                           // 3: messages_service.messages.v1.Message.Content.MetadataEntry
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_messages_service_messages_v1_models_proto_depIdxs = []int32{
-	1, // 0: messages_service.messages.v1.Message.content:type_name -> messages_service.messages.v1.Message.Content
-	3, // 1: messages_service.messages.v1.Message.created_at:type_name -> google.protobuf.Timestamp
-	3, // 2: messages_service.messages.v1.Message.updated_at:type_name -> google.protobuf.Timestamp
-	3, // 3: messages_service.messages.v1.Message.deleted_at:type_name -> google.protobuf.Timestamp
-	2, // 4: messages_service.messages.v1.Message.Content.metadata:type_name -> messages_service.messages.v1.Message.Content.MetadataEntry
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	2, // 0: messages_service.messages.v1.Message.content:type_name -> messages_service.messages.v1.Message.Content
+	4, // 1: messages_service.messages.v1.Message.created_at:type_name -> google.protobuf.Timestamp
+	4, // 2: messages_service.messages.v1.Message.updated_at:type_name -> google.protobuf.Timestamp
+	4, // 3: messages_service.messages.v1.Message.deleted_at:type_name -> google.protobuf.Timestamp
+	0, // 4: messages_service.messages.v1.Message.Content.type:type_name -> messages_service.messages.v1.ContentType
+	3, // 5: messages_service.messages.v1.Message.Content.metadata:type_name -> messages_service.messages.v1.Message.Content.MetadataEntry
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_messages_service_messages_v1_models_proto_init() }
@@ -259,13 +341,14 @@ func file_messages_service_messages_v1_models_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_messages_service_messages_v1_models_proto_rawDesc), len(file_messages_service_messages_v1_models_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_messages_service_messages_v1_models_proto_goTypes,
 		DependencyIndexes: file_messages_service_messages_v1_models_proto_depIdxs,
+		EnumInfos:         file_messages_service_messages_v1_models_proto_enumTypes,
 		MessageInfos:      file_messages_service_messages_v1_models_proto_msgTypes,
 	}.Build()
 	File_messages_service_messages_v1_models_proto = out.File

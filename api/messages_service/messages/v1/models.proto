@@ -6,22 +6,49 @@ option go_package = "messages_service/messages/v1;messagesv1";
 
 import "google/protobuf/timestamp.proto";
 
+// Тип контента, определяющий способ отображения сообщения на клиенте
+enum ContentType {
+  CONTENT_TYPE_UNSPECIFIED = 0;
+  // Обычное текстовое сообщение
+  CONTENT_TYPE_TEXT = 1;
+  // Изображение (ссылка в body, размеры в metadata)
+  CONTENT_TYPE_IMAGE = 2;
+  // Произвольный файл
+  CONTENT_TYPE_FILE = 3;
+  // Стикер
+  CONTENT_TYPE_STICKER = 4;
+}
+
 message Message {
+  // Уникальный ID сообщения (UUID)
   string id = 1;
+  // ID чата, к которому относится сообщение
   string chat_id = 2;
+  // ID пользователя-отправителя
   string sender_id = 3;
   
+  // Вложенная структура с данными сообщения
   message Content {
-    string type = 1; // t (text), i (image), f (file), s (sticker)
+    // Тип контента (текст, фото и т.д.)
+    ContentType type = 1;
+    // Основное содержимое
     string body = 2;
-    map<string, string> metadata = 3; // file_size, duration и т.д.
+    // Дополнительные параметры: file_size, duration, width, height и т.д.
+    map<string, string> metadata = 3;
   }
+
+  // Контент сообщения
   Content content = 4;
 
+  // Время создания сообщения
   google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6; // null в БД -> default в proto
+  // Время последнего редактирования (если 0 — сообщение не редактировалось)
+  google.protobuf.Timestamp updated_at = 6;
+  // Время удаления. Если установлено — сообщение считается удаленным
   google.protobuf.Timestamp deleted_at = 7;
   
-  string reply_to = 8; // ID родительского сообщения
+  // ID сообщения, на которое ответил пользователь
+  string reply_to = 8;
+  // Версия сообщения для оптимистичных блокировок или отслеживания правок
   int64 version = 9;
 }

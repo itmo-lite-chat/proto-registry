@@ -29,8 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatsServiceClient interface {
-	// Создание нового чата (приватного или группового)
-	// При создании сразу добавляются записи в chat_members
+	// При создании чата(приватного или группового) сразу добавляются записи в chat_members
 	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error)
 	// Получение списка чатов конкретного пользователя
 	GetUserChats(ctx context.Context, in *GetUserChatsRequest, opts ...grpc.CallOption) (*GetUserChatsResponse, error)
@@ -92,8 +91,7 @@ func (c *chatsServiceClient) UpdateLastReadMessage(ctx context.Context, in *Upda
 // All implementations must embed UnimplementedChatsServiceServer
 // for forward compatibility.
 type ChatsServiceServer interface {
-	// Создание нового чата (приватного или группового)
-	// При создании сразу добавляются записи в chat_members
+	// При создании чата(приватного или группового) сразу добавляются записи в chat_members
 	CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error)
 	// Получение списка чатов конкретного пользователя
 	GetUserChats(context.Context, *GetUserChatsRequest) (*GetUserChatsResponse, error)

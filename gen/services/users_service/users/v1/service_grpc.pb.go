@@ -22,22 +22,19 @@ const (
 	UsersService_CreateUser_FullMethodName  = "/users_service.users.v1.UsersService/CreateUser"
 	UsersService_GetUserByID_FullMethodName = "/users_service.users.v1.UsersService/GetUserByID"
 	UsersService_ListUsers_FullMethodName   = "/users_service.users.v1.UsersService/ListUsers"
-	UsersService_SearchUsers_FullMethodName = "/users_service.users.v1.UsersService/SearchUsers"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	// Регистрация
+	// Регистрация нового пользователя
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// Получение одного пользователя (для экрана профиля)
+	// Получение информации о пользователе (для экрана профиля)
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
-	// МАССОВЫЙ запрос пользователей (для Gateway)
-	// Чтобы не ходить в базу за каждым пользователем отдельно
+	// Универсальный метод получения списка пользователей
+	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
-	// Поиск пользователей (для начала нового чата)
-	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
 }
 
 type usersServiceClient struct {
@@ -78,29 +75,17 @@ func (c *usersServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest
 	return out, nil
 }
 
-func (c *usersServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchUsersResponse)
-	err := c.cc.Invoke(ctx, UsersService_SearchUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UsersServiceServer is the server API for UsersService service.
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
-	// Регистрация
+	// Регистрация нового пользователя
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// Получение одного пользователя (для экрана профиля)
+	// Получение информации о пользователе (для экрана профиля)
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
-	// МАССОВЫЙ запрос пользователей (для Gateway)
-	// Чтобы не ходить в базу за каждым пользователем отдельно
+	// Универсальный метод получения списка пользователей
+	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// Поиск пользователей (для начала нового чата)
-	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -119,9 +104,6 @@ func (UnimplementedUsersServiceServer) GetUserByID(context.Context, *GetUserByID
 }
 func (UnimplementedUsersServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
-}
-func (UnimplementedUsersServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchUsers not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -198,24 +180,6 @@ func _UsersService_ListUsers_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchUsersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UsersServiceServer).SearchUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UsersService_SearchUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UsersService_ServiceDesc is the grpc.ServiceDesc for UsersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -234,10 +198,6 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUsers",
 			Handler:    _UsersService_ListUsers_Handler,
-		},
-		{
-			MethodName: "SearchUsers",
-			Handler:    _UsersService_SearchUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
