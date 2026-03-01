@@ -25,7 +25,7 @@ const (
 type User struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// UUID пользователя
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// Отображаемое имя пользователя
 	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	// Логин для аутентификации
@@ -70,9 +70,9 @@ func (*User) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_models_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *User) GetId() string {
+func (x *User) GetUserId() string {
 	if x != nil {
-		return x.Id
+		return x.UserId
 	}
 	return ""
 }
@@ -116,9 +116,9 @@ var File_users_service_users_v1_models_proto protoreflect.FileDescriptor
 
 const file_users_service_users_v1_models_proto_rawDesc = "" +
 	"\n" +
-	"#users_service/users/v1/models.proto\x12\x16users_service.users.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcc\x01\n" +
-	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"#users_service/users/v1/models.proto\x12\x16users_service.users.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd5\x01\n" +
+	"\x04User\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
 	"\x05login\x18\x03 \x01(\tR\x05login\x12\x14\n" +
 	"\x05email\x18\x04 \x01(\tR\x05email\x12\"\n" +

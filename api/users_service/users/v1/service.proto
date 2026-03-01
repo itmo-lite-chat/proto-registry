@@ -35,7 +35,7 @@ message CreateUserResponse {
 
 message GetUserByIDRequest {
   // UUID пользователя
-  string id = 1; 
+  string user_id = 1; 
 }
 
 message GetUserByIDResponse {

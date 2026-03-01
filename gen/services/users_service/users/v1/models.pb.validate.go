@@ -56,7 +56,7 @@ func (m *User) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	// no validation rules for UserId
 
 	// no validation rules for Username
 

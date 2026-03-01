@@ -232,8 +232,8 @@ type ChatMember struct {
 	Role MemberRole `protobuf:"varint,3,opt,name=role,proto3,enum=chats_service.chats.v1.MemberRole" json:"role,omitempty"`
 	// Время вступления пользователя в чат
 	JoinedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=joined_at,json=joinedAt,proto3" json:"joined_at,omitempty"`
-	// UUID последнего прочитанного сообщения этим пользователем
-	LastReadMessageId string `protobuf:"bytes,5,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
+	// ID последнего прочитанного сообщения этим пользователем
+	LastReadMessageId int64 `protobuf:"varint,5,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -296,11 +296,11 @@ func (x *ChatMember) GetJoinedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *ChatMember) GetLastReadMessageId() string {
+func (x *ChatMember) GetLastReadMessageId() int64 {
 	if x != nil {
 		return x.LastReadMessageId
 	}
-	return ""
+	return 0
 }
 
 var File_chats_service_chats_v1_models_proto protoreflect.FileDescriptor
@@ -323,7 +323,7 @@ const file_chats_service_chats_v1_models_proto_rawDesc = "" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x126\n" +
 	"\x04role\x18\x03 \x01(\x0e2\".chats_service.chats.v1.MemberRoleR\x04role\x127\n" +
 	"\tjoined_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bjoinedAt\x12/\n" +
-	"\x14last_read_message_id\x18\x05 \x01(\tR\x11lastReadMessageId*Q\n" +
+	"\x14last_read_message_id\x18\x05 \x01(\x03R\x11lastReadMessageId*Q\n" +
 	"\bChatType\x12\x19\n" +
 	"\x15CHAT_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11CHAT_TYPE_PRIVATE\x10\x01\x12\x13\n" +

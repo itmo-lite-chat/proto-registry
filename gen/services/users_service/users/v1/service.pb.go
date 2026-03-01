@@ -141,7 +141,7 @@ func (x *CreateUserResponse) GetUser() *User {
 type GetUserByIDRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// UUID пользователя
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -176,9 +176,9 @@ func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
 	return file_users_service_users_v1_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetUserByIDRequest) GetId() string {
+func (x *GetUserByIDRequest) GetUserId() string {
 	if x != nil {
-		return x.Id
+		return x.UserId
 	}
 	return ""
 }
@@ -376,9 +376,9 @@ const file_users_service_users_v1_service_proto_rawDesc = "" +
 	"avatar_url\x18\x04 \x01(\tH\x00R\tavatarUrl\x88\x01\x01B\r\n" +
 	"\v_avatar_url\"F\n" +
 	"\x12CreateUserResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user\"$\n" +
-	"\x12GetUserByIDRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"G\n" +
+	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user\"-\n" +
+	"\x12GetUserByIDRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"G\n" +
 	"\x13GetUserByIDResponse\x120\n" +
 	"\x04user\x18\x01 \x01(\v2\x1c.users_service.users.v1.UserR\x04user\"\x88\x01\n" +
 	"\x11SerchUsersRequest\x12\x14\n" +

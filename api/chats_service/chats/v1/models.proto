@@ -52,6 +52,6 @@ message ChatMember {
   MemberRole role = 3;
   // Время вступления пользователя в чат
   google.protobuf.Timestamp joined_at = 4;
-  // UUID последнего прочитанного сообщения этим пользователем
-  string last_read_message_id = 5;
+  // ID последнего прочитанного сообщения этим пользователем
+  int64 last_read_message_id = 5;
 }
