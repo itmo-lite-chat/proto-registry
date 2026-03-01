@@ -7,11 +7,11 @@ option go_package = "chats_service/chats/v1;chatsv1";
 import "chats_service/chats/v1/models.proto";
 
 service ChatsService {
-  // При создании чата(приватного или группового) сразу добавляются записи в chat_members
+  // Создать чат
   rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
 
-  // Получение списка чатов конкретного пользователя
-  rpc GetUserChats(GetUserChatsRequest) returns (GetUserChatsResponse);
+  // Получение списка чатов
+  rpc ListUserChats(ListUserChatsRequest) returns (ListUserChatsResponse);
 
   // Получение детальной информации о чате и его участниках
   rpc GetChatDetails(GetChatDetailsRequest) returns (GetChatDetailsResponse);
@@ -23,47 +23,47 @@ service ChatsService {
 message CreateChatRequest {
   // Тип создаваемого чата
   ChatType type = 1;
-  // Список ID пользователей, которые станут участниками чата
+  // UUID пользователей
   repeated string participant_ids = 2;
-  // Название чата (обязательно для групп, для лички - не нужно)
+  // Название чата (обязательно для групп)
   optional string title = 3;
-  // ID пользователя, который создает чат и станет его владельцем
+  // UUID пользователя, который создает чат
   string owner_id = 4;
 }
 
 message CreateChatResponse {
-  // Объект созданного чата с присвоенным ID и системными полями
+  // Созданный чат
   Chat chat = 1;
 }
 
-message GetUserChatsRequest {
-  // ID пользователя, для которого нужно загрузить список чатов
+message ListUserChatsRequest {
+  // UUID пользователя
   string user_id = 1;
 }
 
-message GetUserChatsResponse {
-  // Список всех чатов, в которых состоит данный пользователь
+message ListUserChatsResponse {
+  // Список всех чатов пользователя
   repeated Chat chats = 1;
 }
 
 message GetChatDetailsRequest {
-  // Уникальный ID запрашиваемого чата
+  // UUID чата
   string chat_id = 1;
 }
 
 message GetChatDetailsResponse {
-  // Информация о чате (тип, название, последнее сообщение)
+  // Чат
   Chat chat = 1;
-  // Полный список участников чата с их ролями и статусом прочтения
+  // Список участников чата
   repeated ChatMember members = 2;
 }
 
 message UpdateLastReadMessageRequest {
-  // ID чата, в котором обновляется статус прочтения
+  // UUID чата
   string chat_id = 1;
-  // ID пользователя, который прочел сообщение
+  // UUID пользователя
   string user_id = 2;
-  // ID сообщения, которое теперь считается последним прочитанным для этого юзера
+  // UUID сообщения, которое теперь считается последним
   string last_read_message_id = 3;
 }
 

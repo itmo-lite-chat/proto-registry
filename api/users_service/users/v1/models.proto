@@ -7,15 +7,15 @@ option go_package = "users_service/users/v1;usersv1";
 import "google/protobuf/timestamp.proto";
 
 message User {
-  // Уникальный ID пользователя (UUID)
+  // UUID пользователя
   string id = 1;
-  // Отображаемое имя пользователя (Public Name)
+  // Отображаемое имя пользователя
   string username = 2;
-  // Технический логин для аутентификации (уникальный)
+  // Логин для аутентификации
   string login = 3;
   // Электронная почта пользователя
   string email = 4;
-  // Ссылка на изображение профиля (может отсутствовать)
+  // Ссылка на изображение профиля
   optional string avatar_url = 5;
   // Дата и время регистрации пользователя
   google.protobuf.Timestamp created_at = 6;

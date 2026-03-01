@@ -56,11 +56,9 @@ func (m *Chat) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	// no validation rules for ChatId
 
 	// no validation rules for Type
-
-	// no validation rules for Title
 
 	// no validation rules for OwnerId
 
@@ -93,6 +91,10 @@ func (m *Chat) validate(all bool) error {
 				cause:  err,
 			}
 		}
+	}
+
+	if m.Title != nil {
+		// no validation rules for Title
 	}
 
 	if len(errors) > 0 {

@@ -88,7 +88,9 @@ func (m *SendMessageRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for ReplyTo
+	if m.ReplyToId != nil {
+		// no validation rules for ReplyToId
+	}
 
 	if len(errors) > 0 {
 		return SendMessageRequestMultiError(errors)
@@ -777,7 +779,34 @@ func (m *EditMessageRequest) validate(all bool) error {
 
 	// no validation rules for SenderId
 
-	// no validation rules for NewBody
+	if all {
+		switch v := interface{}(m.GetContent()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, EditMessageRequestValidationError{
+					field:  "Content",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, EditMessageRequestValidationError{
+					field:  "Content",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetContent()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EditMessageRequestValidationError{
+				field:  "Content",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return EditMessageRequestMultiError(errors)

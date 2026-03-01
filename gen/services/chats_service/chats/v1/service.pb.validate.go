@@ -276,22 +276,22 @@ var _ interface {
 	ErrorName() string
 } = CreateChatResponseValidationError{}
 
-// Validate checks the field values on GetUserChatsRequest with the rules
+// Validate checks the field values on ListUserChatsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserChatsRequest) Validate() error {
+func (m *ListUserChatsRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetUserChatsRequest with the rules
+// ValidateAll checks the field values on ListUserChatsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetUserChatsRequestMultiError, or nil if none found.
-func (m *GetUserChatsRequest) ValidateAll() error {
+// ListUserChatsRequestMultiError, or nil if none found.
+func (m *ListUserChatsRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetUserChatsRequest) validate(all bool) error {
+func (m *ListUserChatsRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -301,19 +301,19 @@ func (m *GetUserChatsRequest) validate(all bool) error {
 	// no validation rules for UserId
 
 	if len(errors) > 0 {
-		return GetUserChatsRequestMultiError(errors)
+		return ListUserChatsRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetUserChatsRequestMultiError is an error wrapping multiple validation
-// errors returned by GetUserChatsRequest.ValidateAll() if the designated
+// ListUserChatsRequestMultiError is an error wrapping multiple validation
+// errors returned by ListUserChatsRequest.ValidateAll() if the designated
 // constraints aren't met.
-type GetUserChatsRequestMultiError []error
+type ListUserChatsRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetUserChatsRequestMultiError) Error() string {
+func (m ListUserChatsRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -322,11 +322,11 @@ func (m GetUserChatsRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetUserChatsRequestMultiError) AllErrors() []error { return m }
+func (m ListUserChatsRequestMultiError) AllErrors() []error { return m }
 
-// GetUserChatsRequestValidationError is the validation error returned by
-// GetUserChatsRequest.Validate if the designated constraints aren't met.
-type GetUserChatsRequestValidationError struct {
+// ListUserChatsRequestValidationError is the validation error returned by
+// ListUserChatsRequest.Validate if the designated constraints aren't met.
+type ListUserChatsRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -334,24 +334,24 @@ type GetUserChatsRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetUserChatsRequestValidationError) Field() string { return e.field }
+func (e ListUserChatsRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetUserChatsRequestValidationError) Reason() string { return e.reason }
+func (e ListUserChatsRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetUserChatsRequestValidationError) Cause() error { return e.cause }
+func (e ListUserChatsRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetUserChatsRequestValidationError) Key() bool { return e.key }
+func (e ListUserChatsRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetUserChatsRequestValidationError) ErrorName() string {
-	return "GetUserChatsRequestValidationError"
+func (e ListUserChatsRequestValidationError) ErrorName() string {
+	return "ListUserChatsRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GetUserChatsRequestValidationError) Error() string {
+func (e ListUserChatsRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -363,14 +363,14 @@ func (e GetUserChatsRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetUserChatsRequest.%s: %s%s",
+		"invalid %sListUserChatsRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetUserChatsRequestValidationError{}
+var _ error = ListUserChatsRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -378,24 +378,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetUserChatsRequestValidationError{}
+} = ListUserChatsRequestValidationError{}
 
-// Validate checks the field values on GetUserChatsResponse with the rules
+// Validate checks the field values on ListUserChatsResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserChatsResponse) Validate() error {
+func (m *ListUserChatsResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetUserChatsResponse with the rules
+// ValidateAll checks the field values on ListUserChatsResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetUserChatsResponseMultiError, or nil if none found.
-func (m *GetUserChatsResponse) ValidateAll() error {
+// ListUserChatsResponseMultiError, or nil if none found.
+func (m *ListUserChatsResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetUserChatsResponse) validate(all bool) error {
+func (m *ListUserChatsResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -409,7 +409,7 @@ func (m *GetUserChatsResponse) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GetUserChatsResponseValidationError{
+					errors = append(errors, ListUserChatsResponseValidationError{
 						field:  fmt.Sprintf("Chats[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -417,7 +417,7 @@ func (m *GetUserChatsResponse) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, GetUserChatsResponseValidationError{
+					errors = append(errors, ListUserChatsResponseValidationError{
 						field:  fmt.Sprintf("Chats[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -426,7 +426,7 @@ func (m *GetUserChatsResponse) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return GetUserChatsResponseValidationError{
+				return ListUserChatsResponseValidationError{
 					field:  fmt.Sprintf("Chats[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -437,19 +437,19 @@ func (m *GetUserChatsResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return GetUserChatsResponseMultiError(errors)
+		return ListUserChatsResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetUserChatsResponseMultiError is an error wrapping multiple validation
-// errors returned by GetUserChatsResponse.ValidateAll() if the designated
+// ListUserChatsResponseMultiError is an error wrapping multiple validation
+// errors returned by ListUserChatsResponse.ValidateAll() if the designated
 // constraints aren't met.
-type GetUserChatsResponseMultiError []error
+type ListUserChatsResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetUserChatsResponseMultiError) Error() string {
+func (m ListUserChatsResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -458,11 +458,11 @@ func (m GetUserChatsResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetUserChatsResponseMultiError) AllErrors() []error { return m }
+func (m ListUserChatsResponseMultiError) AllErrors() []error { return m }
 
-// GetUserChatsResponseValidationError is the validation error returned by
-// GetUserChatsResponse.Validate if the designated constraints aren't met.
-type GetUserChatsResponseValidationError struct {
+// ListUserChatsResponseValidationError is the validation error returned by
+// ListUserChatsResponse.Validate if the designated constraints aren't met.
+type ListUserChatsResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -470,24 +470,24 @@ type GetUserChatsResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetUserChatsResponseValidationError) Field() string { return e.field }
+func (e ListUserChatsResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetUserChatsResponseValidationError) Reason() string { return e.reason }
+func (e ListUserChatsResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetUserChatsResponseValidationError) Cause() error { return e.cause }
+func (e ListUserChatsResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetUserChatsResponseValidationError) Key() bool { return e.key }
+func (e ListUserChatsResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetUserChatsResponseValidationError) ErrorName() string {
-	return "GetUserChatsResponseValidationError"
+func (e ListUserChatsResponseValidationError) ErrorName() string {
+	return "ListUserChatsResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GetUserChatsResponseValidationError) Error() string {
+func (e ListUserChatsResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -499,14 +499,14 @@ func (e GetUserChatsResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetUserChatsResponse.%s: %s%s",
+		"invalid %sListUserChatsResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetUserChatsResponseValidationError{}
+var _ error = ListUserChatsResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -514,7 +514,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetUserChatsResponseValidationError{}
+} = ListUserChatsResponseValidationError{}
 
 // Validate checks the field values on GetChatDetailsRequest with the rules
 // defined in the proto definition for this message. If any rules are

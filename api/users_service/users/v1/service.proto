@@ -7,21 +7,21 @@ option go_package = "users_service/users/v1;usersv1";
 import "users_service/users/v1/models.proto";
 
 service UsersService {
-  // Регистрация нового пользователя
+  // Создание пользователя
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 
-  // Получение информации о пользователе (для экрана профиля)
+  // Получение информации о пользователе
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
 
   // Универсальный метод получения списка пользователей
   // Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc SerchUsers(SerchUsersRequest) returns (SerchUsersResponse);
 }
 
 message CreateUserRequest {
-  // Публичное имя пользователя, которое видят другие участники
+  // Имя пользователя
   string username = 1;
-  // Уникальный логин для входа в систему
+  // Логин для входа в систему
   string login = 2;
   // Email пользователя
   string email = 3;
@@ -30,32 +30,29 @@ message CreateUserRequest {
 }
 
 message CreateUserResponse {
-  // Объект созданного пользователя с заполненным ID и датой регистрации
+  // Пользователь
   User user = 1;
 }
 
 message GetUserByIDRequest {
-  // Уникальный ID пользователя (UUID)
+  // UUID пользователя
   string id = 1; 
 }
 
 message GetUserByIDResponse {
-  // Данные профиля найденного пользователя
+  // Данные пользователя
   User user = 1;
 }
 
-message ListUsersRequest {
-  // Фильтрация: можно искать по строке, по списку ID или по конкретным полям
-  oneof filter {
-    // Поиск по подстроке (login или username) — полнотекстовый
-    string query = 1;
-    
-    // Получение конкретных пользователей по списку их ID
-    UserIdsFilter user_ids_filter = 2;
-    
-    // Точный поиск по логину
-    string login_filter = 3;
-  }
+message SerchUsersRequest {
+  // Поиск по подстроке (login или username) — полнотекстовый
+  string query = 1;
+  
+  // Получение конкретных пользователей по списку их UUID
+  repeated string user_ids = 2;
+  
+  // Точный поиск по логину
+  string login = 3;
 
   // Смещение для пагинации
   int32 offset = 4;
@@ -63,18 +60,10 @@ message ListUsersRequest {
   int32 limit = 5;
 }
 
-// Обертка для списка ID (в oneof нельзя использовать repeated напрямую)
-message UserIdsFilter {
-  repeated string ids = 1;
-}
-
-message ListUsersResponse {
+message SerchUsersResponse {
   // Список найденных пользователей
   repeated User users = 1;
   
-  // Мапа "ID -> User" для удобного поиска пользователя по ключу без цикла
-  map<string, User> users_map = 2;
-  
   // Общее количество записей, подходящих под фильтр
-  int32 total_count = 3;
+  int32 count = 2;
 }

@@ -22,16 +22,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Тип контента, определяющий способ отображения сообщения на клиенте
+// Тип контента
 type ContentType int32
 
 const (
 	ContentType_CONTENT_TYPE_UNSPECIFIED ContentType = 0
-	// Обычное текстовое сообщение
+	// Текстовое сообщение
 	ContentType_CONTENT_TYPE_TEXT ContentType = 1
-	// Изображение (ссылка в body, размеры в metadata)
+	// Изображение
 	ContentType_CONTENT_TYPE_IMAGE ContentType = 2
-	// Произвольный файл
+	// Файл
 	ContentType_CONTENT_TYPE_FILE ContentType = 3
 	// Стикер
 	ContentType_CONTENT_TYPE_STICKER ContentType = 4
@@ -82,33 +82,95 @@ func (ContentType) EnumDescriptor() ([]byte, []int) {
 	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0}
 }
 
+// Данные сообщения
+type Content struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Тип контента
+	Type ContentType `protobuf:"varint,1,opt,name=type,proto3,enum=messages_service.messages.v1.ContentType" json:"type,omitempty"`
+	// Основное содержимое
+	Body string `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
+	// Дополнительные параметры: file_size, duration, width, height и т.д.
+	Metadata      map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` //TODO: убрать метадату и добавить поля
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Content) Reset() {
+	*x = Content{}
+	mi := &file_messages_service_messages_v1_models_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Content) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Content) ProtoMessage() {}
+
+func (x *Content) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_models_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Content.ProtoReflect.Descriptor instead.
+func (*Content) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Content) GetType() ContentType {
+	if x != nil {
+		return x.Type
+	}
+	return ContentType_CONTENT_TYPE_UNSPECIFIED
+}
+
+func (x *Content) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+func (x *Content) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 type Message struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Уникальный ID сообщения (UUID)
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// ID чата, к которому относится сообщение
+	// ID сообщения
+	MessageId int64 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	// UUID чата
 	ChatId string `protobuf:"bytes,2,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
 	// ID пользователя-отправителя
 	SenderId string `protobuf:"bytes,3,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
 	// Контент сообщения
-	Content *Message_Content `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content *Content `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	// Время создания сообщения
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// Время последнего редактирования (если 0 — сообщение не редактировалось)
+	// Время последнего редактирования
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// Время удаления. Если установлено — сообщение считается удаленным
+	// Время удаления
 	DeletedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
-	// ID сообщения, на которое ответил пользователь
-	ReplyTo string `protobuf:"bytes,8,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
-	// Версия сообщения для оптимистичных блокировок или отслеживания правок
-	Version       int64 `protobuf:"varint,9,opt,name=version,proto3" json:"version,omitempty"`
+	// UUID сообщения, на которое ответил пользователь
+	ReplyToId     string `protobuf:"bytes,8,opt,name=reply_to_id,json=replyToId,proto3" json:"reply_to_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Message) Reset() {
 	*x = Message{}
-	mi := &file_messages_service_messages_v1_models_proto_msgTypes[0]
+	mi := &file_messages_service_messages_v1_models_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -120,7 +182,7 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_models_proto_msgTypes[0]
+	mi := &file_messages_service_messages_v1_models_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -133,14 +195,14 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0}
+	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Message) GetId() string {
+func (x *Message) GetMessageId() int64 {
 	if x != nil {
-		return x.Id
+		return x.MessageId
 	}
-	return ""
+	return 0
 }
 
 func (x *Message) GetChatId() string {
@@ -157,7 +219,7 @@ func (x *Message) GetSenderId() string {
 	return ""
 }
 
-func (x *Message) GetContent() *Message_Content {
+func (x *Message) GetContent() *Content {
 	if x != nil {
 		return x.Content
 	}
@@ -185,109 +247,38 @@ func (x *Message) GetDeletedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *Message) GetReplyTo() string {
+func (x *Message) GetReplyToId() string {
 	if x != nil {
-		return x.ReplyTo
+		return x.ReplyToId
 	}
 	return ""
-}
-
-func (x *Message) GetVersion() int64 {
-	if x != nil {
-		return x.Version
-	}
-	return 0
-}
-
-// Вложенная структура с данными сообщения
-type Message_Content struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Тип контента (текст, фото и т.д.)
-	Type ContentType `protobuf:"varint,1,opt,name=type,proto3,enum=messages_service.messages.v1.ContentType" json:"type,omitempty"`
-	// Основное содержимое
-	Body string `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
-	// Дополнительные параметры: file_size, duration, width, height и т.д.
-	Metadata      map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Message_Content) Reset() {
-	*x = Message_Content{}
-	mi := &file_messages_service_messages_v1_models_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Message_Content) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Message_Content) ProtoMessage() {}
-
-func (x *Message_Content) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_models_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Message_Content.ProtoReflect.Descriptor instead.
-func (*Message_Content) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_models_proto_rawDescGZIP(), []int{0, 0}
-}
-
-func (x *Message_Content) GetType() ContentType {
-	if x != nil {
-		return x.Type
-	}
-	return ContentType_CONTENT_TYPE_UNSPECIFIED
-}
-
-func (x *Message_Content) GetBody() string {
-	if x != nil {
-		return x.Body
-	}
-	return ""
-}
-
-func (x *Message_Content) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
 }
 
 var File_messages_service_messages_v1_models_proto protoreflect.FileDescriptor
 
 const file_messages_service_messages_v1_models_proto_rawDesc = "" +
 	"\n" +
-	")messages_service/messages/v1/models.proto\x12\x1cmessages_service.messages.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf3\x04\n" +
-	"\aMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	")messages_service/messages/v1/models.proto\x12\x1cmessages_service.messages.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xea\x01\n" +
+	"\aContent\x12=\n" +
+	"\x04type\x18\x01 \x01(\x0e2).messages_service.messages.v1.ContentTypeR\x04type\x12\x12\n" +
+	"\x04body\x18\x02 \x01(\tR\x04body\x12O\n" +
+	"\bmetadata\x18\x03 \x03(\v23.messages_service.messages.v1.Content.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf0\x02\n" +
+	"\aMessage\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x17\n" +
 	"\achat_id\x18\x02 \x01(\tR\x06chatId\x12\x1b\n" +
-	"\tsender_id\x18\x03 \x01(\tR\bsenderId\x12G\n" +
-	"\acontent\x18\x04 \x01(\v2-.messages_service.messages.v1.Message.ContentR\acontent\x129\n" +
+	"\tsender_id\x18\x03 \x01(\tR\bsenderId\x12?\n" +
+	"\acontent\x18\x04 \x01(\v2%.messages_service.messages.v1.ContentR\acontent\x129\n" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x12\x19\n" +
-	"\breply_to\x18\b \x01(\tR\areplyTo\x12\x18\n" +
-	"\aversion\x18\t \x01(\x03R\aversion\x1a\xf2\x01\n" +
-	"\aContent\x12=\n" +
-	"\x04type\x18\x01 \x01(\x0e2).messages_service.messages.v1.ContentTypeR\x04type\x12\x12\n" +
-	"\x04body\x18\x02 \x01(\tR\x04body\x12W\n" +
-	"\bmetadata\x18\x03 \x03(\v2;.messages_service.messages.v1.Message.Content.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*\x8b\x01\n" +
+	"deleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x12\x1e\n" +
+	"\vreply_to_id\x18\b \x01(\tR\treplyToId*\x8b\x01\n" +
 	"\vContentType\x12\x1c\n" +
 	"\x18CONTENT_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11CONTENT_TYPE_TEXT\x10\x01\x12\x16\n" +
@@ -312,18 +303,18 @@ var file_messages_service_messages_v1_models_proto_enumTypes = make([]protoimpl.
 var file_messages_service_messages_v1_models_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_messages_service_messages_v1_models_proto_goTypes = []any{
 	(ContentType)(0),              // 0: messages_service.messages.v1.ContentType
-	(*Message)(nil),               // 1: messages_service.messages.v1.Message
-	(*Message_Content)(nil),       // 2: messages_service.messages.v1.Message.Content
-	nil,                           // 3: messages_service.messages.v1.Message.Content.MetadataEntry
+	(*Content)(nil),               // 1: messages_service.messages.v1.Content
+	(*Message)(nil),               // 2: messages_service.messages.v1.Message
+	nil,                           // 3: messages_service.messages.v1.Content.MetadataEntry
 	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_messages_service_messages_v1_models_proto_depIdxs = []int32{
-	2, // 0: messages_service.messages.v1.Message.content:type_name -> messages_service.messages.v1.Message.Content
-	4, // 1: messages_service.messages.v1.Message.created_at:type_name -> google.protobuf.Timestamp
-	4, // 2: messages_service.messages.v1.Message.updated_at:type_name -> google.protobuf.Timestamp
-	4, // 3: messages_service.messages.v1.Message.deleted_at:type_name -> google.protobuf.Timestamp
-	0, // 4: messages_service.messages.v1.Message.Content.type:type_name -> messages_service.messages.v1.ContentType
-	3, // 5: messages_service.messages.v1.Message.Content.metadata:type_name -> messages_service.messages.v1.Message.Content.MetadataEntry
+	0, // 0: messages_service.messages.v1.Content.type:type_name -> messages_service.messages.v1.ContentType
+	3, // 1: messages_service.messages.v1.Content.metadata:type_name -> messages_service.messages.v1.Content.MetadataEntry
+	1, // 2: messages_service.messages.v1.Message.content:type_name -> messages_service.messages.v1.Content
+	4, // 3: messages_service.messages.v1.Message.created_at:type_name -> google.protobuf.Timestamp
+	4, // 4: messages_service.messages.v1.Message.updated_at:type_name -> google.protobuf.Timestamp
+	4, // 5: messages_service.messages.v1.Message.deleted_at:type_name -> google.protobuf.Timestamp
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name

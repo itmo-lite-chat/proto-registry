@@ -25,11 +25,11 @@ type CreateChatRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Тип создаваемого чата
 	Type ChatType `protobuf:"varint,1,opt,name=type,proto3,enum=chats_service.chats.v1.ChatType" json:"type,omitempty"`
-	// Список ID пользователей, которые станут участниками чата
+	// UUID пользователей
 	ParticipantIds []string `protobuf:"bytes,2,rep,name=participant_ids,json=participantIds,proto3" json:"participant_ids,omitempty"`
-	// Название чата (обязательно для групп, для лички - не нужно)
+	// Название чата (обязательно для групп)
 	Title *string `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
-	// ID пользователя, который создает чат и станет его владельцем
+	// UUID пользователя, который создает чат
 	OwnerId       string `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -95,7 +95,7 @@ func (x *CreateChatRequest) GetOwnerId() string {
 
 type CreateChatResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Объект созданного чата с присвоенным ID и системными полями
+	// Созданный чат
 	Chat          *Chat `protobuf:"bytes,1,opt,name=chat,proto3" json:"chat,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -138,28 +138,28 @@ func (x *CreateChatResponse) GetChat() *Chat {
 	return nil
 }
 
-type GetUserChatsRequest struct {
+type ListUserChatsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID пользователя, для которого нужно загрузить список чатов
+	// UUID пользователя
 	UserId        string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserChatsRequest) Reset() {
-	*x = GetUserChatsRequest{}
+func (x *ListUserChatsRequest) Reset() {
+	*x = ListUserChatsRequest{}
 	mi := &file_chats_service_chats_v1_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserChatsRequest) String() string {
+func (x *ListUserChatsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserChatsRequest) ProtoMessage() {}
+func (*ListUserChatsRequest) ProtoMessage() {}
 
-func (x *GetUserChatsRequest) ProtoReflect() protoreflect.Message {
+func (x *ListUserChatsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_chats_service_chats_v1_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -171,40 +171,40 @@ func (x *GetUserChatsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserChatsRequest.ProtoReflect.Descriptor instead.
-func (*GetUserChatsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUserChatsRequest.ProtoReflect.Descriptor instead.
+func (*ListUserChatsRequest) Descriptor() ([]byte, []int) {
 	return file_chats_service_chats_v1_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetUserChatsRequest) GetUserId() string {
+func (x *ListUserChatsRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-type GetUserChatsResponse struct {
+type ListUserChatsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Список всех чатов, в которых состоит данный пользователь
+	// Список всех чатов пользователя
 	Chats         []*Chat `protobuf:"bytes,1,rep,name=chats,proto3" json:"chats,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserChatsResponse) Reset() {
-	*x = GetUserChatsResponse{}
+func (x *ListUserChatsResponse) Reset() {
+	*x = ListUserChatsResponse{}
 	mi := &file_chats_service_chats_v1_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserChatsResponse) String() string {
+func (x *ListUserChatsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserChatsResponse) ProtoMessage() {}
+func (*ListUserChatsResponse) ProtoMessage() {}
 
-func (x *GetUserChatsResponse) ProtoReflect() protoreflect.Message {
+func (x *ListUserChatsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_chats_service_chats_v1_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -216,12 +216,12 @@ func (x *GetUserChatsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserChatsResponse.ProtoReflect.Descriptor instead.
-func (*GetUserChatsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUserChatsResponse.ProtoReflect.Descriptor instead.
+func (*ListUserChatsResponse) Descriptor() ([]byte, []int) {
 	return file_chats_service_chats_v1_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetUserChatsResponse) GetChats() []*Chat {
+func (x *ListUserChatsResponse) GetChats() []*Chat {
 	if x != nil {
 		return x.Chats
 	}
@@ -230,7 +230,7 @@ func (x *GetUserChatsResponse) GetChats() []*Chat {
 
 type GetChatDetailsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Уникальный ID запрашиваемого чата
+	// UUID чата
 	ChatId        string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -275,9 +275,9 @@ func (x *GetChatDetailsRequest) GetChatId() string {
 
 type GetChatDetailsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Информация о чате (тип, название, последнее сообщение)
+	// Чат
 	Chat *Chat `protobuf:"bytes,1,opt,name=chat,proto3" json:"chat,omitempty"`
-	// Полный список участников чата с их ролями и статусом прочтения
+	// Список участников чата
 	Members       []*ChatMember `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -329,11 +329,11 @@ func (x *GetChatDetailsResponse) GetMembers() []*ChatMember {
 
 type UpdateLastReadMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID чата, в котором обновляется статус прочтения
+	// UUID чата
 	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	// ID пользователя, который прочел сообщение
+	// UUID пользователя
 	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// ID сообщения, которое теперь считается последним прочитанным для этого юзера
+	// UUID сообщения, которое теперь считается последним
 	LastReadMessageId string `protobuf:"bytes,3,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -438,10 +438,10 @@ const file_chats_service_chats_v1_service_proto_rawDesc = "" +
 	"\bowner_id\x18\x04 \x01(\tR\aownerIdB\b\n" +
 	"\x06_title\"F\n" +
 	"\x12CreateChatResponse\x120\n" +
-	"\x04chat\x18\x01 \x01(\v2\x1c.chats_service.chats.v1.ChatR\x04chat\".\n" +
-	"\x13GetUserChatsRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"J\n" +
-	"\x14GetUserChatsResponse\x122\n" +
+	"\x04chat\x18\x01 \x01(\v2\x1c.chats_service.chats.v1.ChatR\x04chat\"/\n" +
+	"\x14ListUserChatsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"K\n" +
+	"\x15ListUserChatsResponse\x122\n" +
 	"\x05chats\x18\x01 \x03(\v2\x1c.chats_service.chats.v1.ChatR\x05chats\"0\n" +
 	"\x15GetChatDetailsRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\"\x88\x01\n" +
@@ -452,11 +452,11 @@ const file_chats_service_chats_v1_service_proto_rawDesc = "" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12/\n" +
 	"\x14last_read_message_id\x18\x03 \x01(\tR\x11lastReadMessageId\"\x1f\n" +
-	"\x1dUpdateLastReadMessageResponse2\xd6\x03\n" +
+	"\x1dUpdateLastReadMessageResponse2\xd9\x03\n" +
 	"\fChatsService\x12c\n" +
 	"\n" +
-	"CreateChat\x12).chats_service.chats.v1.CreateChatRequest\x1a*.chats_service.chats.v1.CreateChatResponse\x12i\n" +
-	"\fGetUserChats\x12+.chats_service.chats.v1.GetUserChatsRequest\x1a,.chats_service.chats.v1.GetUserChatsResponse\x12o\n" +
+	"CreateChat\x12).chats_service.chats.v1.CreateChatRequest\x1a*.chats_service.chats.v1.CreateChatResponse\x12l\n" +
+	"\rListUserChats\x12,.chats_service.chats.v1.ListUserChatsRequest\x1a-.chats_service.chats.v1.ListUserChatsResponse\x12o\n" +
 	"\x0eGetChatDetails\x12-.chats_service.chats.v1.GetChatDetailsRequest\x1a..chats_service.chats.v1.GetChatDetailsResponse\x12\x84\x01\n" +
 	"\x15UpdateLastReadMessage\x124.chats_service.chats.v1.UpdateLastReadMessageRequest\x1a5.chats_service.chats.v1.UpdateLastReadMessageResponseB\xc0\x01\n" +
 	"\x1acom.chats_service.chats.v1B\fServiceProtoP\x01Z\x1echats_service/chats/v1;chatsv1\xa2\x02\x03CCX\xaa\x02\x15ChatsService.Chats.V1\xca\x02\x15ChatsService\\Chats\\V1\xe2\x02!ChatsService\\Chats\\V1\\GPBMetadata\xea\x02\x17ChatsService::Chats::V1b\x06proto3"
@@ -477,8 +477,8 @@ var file_chats_service_chats_v1_service_proto_msgTypes = make([]protoimpl.Messag
 var file_chats_service_chats_v1_service_proto_goTypes = []any{
 	(*CreateChatRequest)(nil),             // 0: chats_service.chats.v1.CreateChatRequest
 	(*CreateChatResponse)(nil),            // 1: chats_service.chats.v1.CreateChatResponse
-	(*GetUserChatsRequest)(nil),           // 2: chats_service.chats.v1.GetUserChatsRequest
-	(*GetUserChatsResponse)(nil),          // 3: chats_service.chats.v1.GetUserChatsResponse
+	(*ListUserChatsRequest)(nil),          // 2: chats_service.chats.v1.ListUserChatsRequest
+	(*ListUserChatsResponse)(nil),         // 3: chats_service.chats.v1.ListUserChatsResponse
 	(*GetChatDetailsRequest)(nil),         // 4: chats_service.chats.v1.GetChatDetailsRequest
 	(*GetChatDetailsResponse)(nil),        // 5: chats_service.chats.v1.GetChatDetailsResponse
 	(*UpdateLastReadMessageRequest)(nil),  // 6: chats_service.chats.v1.UpdateLastReadMessageRequest
@@ -490,15 +490,15 @@ var file_chats_service_chats_v1_service_proto_goTypes = []any{
 var file_chats_service_chats_v1_service_proto_depIdxs = []int32{
 	8,  // 0: chats_service.chats.v1.CreateChatRequest.type:type_name -> chats_service.chats.v1.ChatType
 	9,  // 1: chats_service.chats.v1.CreateChatResponse.chat:type_name -> chats_service.chats.v1.Chat
-	9,  // 2: chats_service.chats.v1.GetUserChatsResponse.chats:type_name -> chats_service.chats.v1.Chat
+	9,  // 2: chats_service.chats.v1.ListUserChatsResponse.chats:type_name -> chats_service.chats.v1.Chat
 	9,  // 3: chats_service.chats.v1.GetChatDetailsResponse.chat:type_name -> chats_service.chats.v1.Chat
 	10, // 4: chats_service.chats.v1.GetChatDetailsResponse.members:type_name -> chats_service.chats.v1.ChatMember
 	0,  // 5: chats_service.chats.v1.ChatsService.CreateChat:input_type -> chats_service.chats.v1.CreateChatRequest
-	2,  // 6: chats_service.chats.v1.ChatsService.GetUserChats:input_type -> chats_service.chats.v1.GetUserChatsRequest
+	2,  // 6: chats_service.chats.v1.ChatsService.ListUserChats:input_type -> chats_service.chats.v1.ListUserChatsRequest
 	4,  // 7: chats_service.chats.v1.ChatsService.GetChatDetails:input_type -> chats_service.chats.v1.GetChatDetailsRequest
 	6,  // 8: chats_service.chats.v1.ChatsService.UpdateLastReadMessage:input_type -> chats_service.chats.v1.UpdateLastReadMessageRequest
 	1,  // 9: chats_service.chats.v1.ChatsService.CreateChat:output_type -> chats_service.chats.v1.CreateChatResponse
-	3,  // 10: chats_service.chats.v1.ChatsService.GetUserChats:output_type -> chats_service.chats.v1.GetUserChatsResponse
+	3,  // 10: chats_service.chats.v1.ChatsService.ListUserChats:output_type -> chats_service.chats.v1.ListUserChatsResponse
 	5,  // 11: chats_service.chats.v1.ChatsService.GetChatDetails:output_type -> chats_service.chats.v1.GetChatDetailsResponse
 	7,  // 12: chats_service.chats.v1.ChatsService.UpdateLastReadMessage:output_type -> chats_service.chats.v1.UpdateLastReadMessageResponse
 	9,  // [9:13] is the sub-list for method output_type

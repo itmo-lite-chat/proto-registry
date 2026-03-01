@@ -21,20 +21,20 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	UsersService_CreateUser_FullMethodName  = "/users_service.users.v1.UsersService/CreateUser"
 	UsersService_GetUserByID_FullMethodName = "/users_service.users.v1.UsersService/GetUserByID"
-	UsersService_ListUsers_FullMethodName   = "/users_service.users.v1.UsersService/ListUsers"
+	UsersService_SerchUsers_FullMethodName  = "/users_service.users.v1.UsersService/SerchUsers"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	// Регистрация нового пользователя
+	// Создание пользователя
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// Получение информации о пользователе (для экрана профиля)
+	// Получение информации о пользователе
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 	// Универсальный метод получения списка пользователей
 	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
-	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	SerchUsers(ctx context.Context, in *SerchUsersRequest, opts ...grpc.CallOption) (*SerchUsersResponse, error)
 }
 
 type usersServiceClient struct {
@@ -65,10 +65,10 @@ func (c *usersServiceClient) GetUserByID(ctx context.Context, in *GetUserByIDReq
 	return out, nil
 }
 
-func (c *usersServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+func (c *usersServiceClient) SerchUsers(ctx context.Context, in *SerchUsersRequest, opts ...grpc.CallOption) (*SerchUsersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListUsersResponse)
-	err := c.cc.Invoke(ctx, UsersService_ListUsers_FullMethodName, in, out, cOpts...)
+	out := new(SerchUsersResponse)
+	err := c.cc.Invoke(ctx, UsersService_SerchUsers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,13 +79,13 @@ func (c *usersServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
-	// Регистрация нового пользователя
+	// Создание пользователя
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// Получение информации о пользователе (для экрана профиля)
+	// Получение информации о пользователе
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	// Универсальный метод получения списка пользователей
 	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
-	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	SerchUsers(context.Context, *SerchUsersRequest) (*SerchUsersResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -102,8 +102,8 @@ func (UnimplementedUsersServiceServer) CreateUser(context.Context, *CreateUserRe
 func (UnimplementedUsersServiceServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserByID not implemented")
 }
-func (UnimplementedUsersServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
+func (UnimplementedUsersServiceServer) SerchUsers(context.Context, *SerchUsersRequest) (*SerchUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SerchUsers not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -162,20 +162,20 @@ func _UsersService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUsersRequest)
+func _UsersService_SerchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SerchUsersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).ListUsers(ctx, in)
+		return srv.(UsersServiceServer).SerchUsers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_ListUsers_FullMethodName,
+		FullMethod: UsersService_SerchUsers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
+		return srv.(UsersServiceServer).SerchUsers(ctx, req.(*SerchUsersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,8 +196,8 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UsersService_GetUserByID_Handler,
 		},
 		{
-			MethodName: "ListUsers",
-			Handler:    _UsersService_ListUsers_Handler,
+			MethodName: "SerchUsers",
+			Handler:    _UsersService_SerchUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -23,12 +23,12 @@ const (
 
 type SendMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID чата, в который отправляется сообщение
+	// UUID чата
 	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	// Контент сообщения (текст, медиа и тд)
-	Content *Message_Content `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
-	// ID сообщения, на которое отвечаем (опционально)
-	ReplyTo       string `protobuf:"bytes,3,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
+	// Контент сообщения
+	Content *Content `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	// ID сообщения, на которое отвечаем
+	ReplyToId     *int64 `protobuf:"varint,3,opt,name=reply_to_id,json=replyToId,proto3,oneof" json:"reply_to_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,23 +70,23 @@ func (x *SendMessageRequest) GetChatId() string {
 	return ""
 }
 
-func (x *SendMessageRequest) GetContent() *Message_Content {
+func (x *SendMessageRequest) GetContent() *Content {
 	if x != nil {
 		return x.Content
 	}
 	return nil
 }
 
-func (x *SendMessageRequest) GetReplyTo() string {
-	if x != nil {
-		return x.ReplyTo
+func (x *SendMessageRequest) GetReplyToId() int64 {
+	if x != nil && x.ReplyToId != nil {
+		return *x.ReplyToId
 	}
-	return ""
+	return 0
 }
 
 type SendMessageResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Сообщение с ID и временем создания
+	// Сообщение
 	Message       *Message `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -131,7 +131,7 @@ func (x *SendMessageResponse) GetMessage() *Message {
 
 type GetChatHistoryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID чата для загрузки истории
+	// UUID чата
 	ChatId        string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -221,10 +221,10 @@ func (x *GetChatHistoryResponse) GetMessages() []*Message {
 
 type GetUnreadCountRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Идентификатор чата
+	// UUID чата
 	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	// ID последнего прочитанного сообщения, от которого пойдет отсчет
-	LastReadMessageId string `protobuf:"bytes,2,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
+	// ID последнего прочитанного сообщения
+	LastReadMessageId int64 `protobuf:"varint,2,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -266,11 +266,11 @@ func (x *GetUnreadCountRequest) GetChatId() string {
 	return ""
 }
 
-func (x *GetUnreadCountRequest) GetLastReadMessageId() string {
+func (x *GetUnreadCountRequest) GetLastReadMessageId() int64 {
 	if x != nil {
 		return x.LastReadMessageId
 	}
-	return ""
+	return 0
 }
 
 type GetUnreadCountResponse struct {
@@ -321,11 +321,11 @@ func (x *GetUnreadCountResponse) GetUnreadCount() int32 {
 type EditMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID редактируемого сообщения
-	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	// ID отправителя для проверки прав доступа
+	MessageId int64 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	// UUID отправителя для проверки прав доступа
 	SenderId string `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
 	// Новое содержание сообщения
-	NewBody       string `protobuf:"bytes,3,opt,name=new_body,json=newBody,proto3" json:"new_body,omitempty"`
+	Content       *Content `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -360,11 +360,11 @@ func (*EditMessageRequest) Descriptor() ([]byte, []int) {
 	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *EditMessageRequest) GetMessageId() string {
+func (x *EditMessageRequest) GetMessageId() int64 {
 	if x != nil {
 		return x.MessageId
 	}
-	return ""
+	return 0
 }
 
 func (x *EditMessageRequest) GetSenderId() string {
@@ -374,16 +374,16 @@ func (x *EditMessageRequest) GetSenderId() string {
 	return ""
 }
 
-func (x *EditMessageRequest) GetNewBody() string {
+func (x *EditMessageRequest) GetContent() *Content {
 	if x != nil {
-		return x.NewBody
+		return x.Content
 	}
-	return ""
+	return nil
 }
 
 type EditMessageResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Обновленный объект сообщения
+	// Обновленное сообщение
 	Message       *Message `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -429,8 +429,8 @@ func (x *EditMessageResponse) GetMessage() *Message {
 type DeleteMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID удаляемого сообщения
-	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	// ID пользователя, который удаляет
+	MessageId int64 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	// UUID пользователя
 	UserId        string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -466,11 +466,11 @@ func (*DeleteMessageRequest) Descriptor() ([]byte, []int) {
 	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *DeleteMessageRequest) GetMessageId() string {
+func (x *DeleteMessageRequest) GetMessageId() int64 {
 	if x != nil {
 		return x.MessageId
 	}
-	return ""
+	return 0
 }
 
 func (x *DeleteMessageRequest) GetUserId() string {
@@ -520,11 +520,12 @@ var File_messages_service_messages_v1_service_proto protoreflect.FileDescriptor
 
 const file_messages_service_messages_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"*messages_service/messages/v1/service.proto\x12\x1cmessages_service.messages.v1\x1a)messages_service/messages/v1/models.proto\"\x91\x01\n" +
+	"*messages_service/messages/v1/service.proto\x12\x1cmessages_service.messages.v1\x1a)messages_service/messages/v1/models.proto\"\xa3\x01\n" +
 	"\x12SendMessageRequest\x12\x17\n" +
-	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12G\n" +
-	"\acontent\x18\x02 \x01(\v2-.messages_service.messages.v1.Message.ContentR\acontent\x12\x19\n" +
-	"\breply_to\x18\x03 \x01(\tR\areplyTo\"V\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12?\n" +
+	"\acontent\x18\x02 \x01(\v2%.messages_service.messages.v1.ContentR\acontent\x12#\n" +
+	"\vreply_to_id\x18\x03 \x01(\x03H\x00R\treplyToId\x88\x01\x01B\x0e\n" +
+	"\f_reply_to_id\"V\n" +
 	"\x13SendMessageResponse\x12?\n" +
 	"\amessage\x18\x01 \x01(\v2%.messages_service.messages.v1.MessageR\amessage\"0\n" +
 	"\x15GetChatHistoryRequest\x12\x17\n" +
@@ -533,19 +534,19 @@ const file_messages_service_messages_v1_service_proto_rawDesc = "" +
 	"\bmessages\x18\x01 \x03(\v2%.messages_service.messages.v1.MessageR\bmessages\"a\n" +
 	"\x15GetUnreadCountRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12/\n" +
-	"\x14last_read_message_id\x18\x02 \x01(\tR\x11lastReadMessageId\";\n" +
+	"\x14last_read_message_id\x18\x02 \x01(\x03R\x11lastReadMessageId\";\n" +
 	"\x16GetUnreadCountResponse\x12!\n" +
-	"\funread_count\x18\x01 \x01(\x05R\vunreadCount\"k\n" +
+	"\funread_count\x18\x01 \x01(\x05R\vunreadCount\"\x91\x01\n" +
 	"\x12EditMessageRequest\x12\x1d\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x1b\n" +
-	"\tsender_id\x18\x02 \x01(\tR\bsenderId\x12\x19\n" +
-	"\bnew_body\x18\x03 \x01(\tR\anewBody\"V\n" +
+	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x1b\n" +
+	"\tsender_id\x18\x02 \x01(\tR\bsenderId\x12?\n" +
+	"\acontent\x18\x03 \x01(\v2%.messages_service.messages.v1.ContentR\acontent\"V\n" +
 	"\x13EditMessageResponse\x12?\n" +
 	"\amessage\x18\x01 \x01(\v2%.messages_service.messages.v1.MessageR\amessage\"N\n" +
 	"\x14DeleteMessageRequest\x12\x1d\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x17\n" +
+	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"\x17\n" +
 	"\x15DeleteMessageResponse2\xed\x04\n" +
 	"\x0fMessagesService\x12r\n" +
@@ -580,29 +581,30 @@ var file_messages_service_messages_v1_service_proto_goTypes = []any{
 	(*EditMessageResponse)(nil),    // 7: messages_service.messages.v1.EditMessageResponse
 	(*DeleteMessageRequest)(nil),   // 8: messages_service.messages.v1.DeleteMessageRequest
 	(*DeleteMessageResponse)(nil),  // 9: messages_service.messages.v1.DeleteMessageResponse
-	(*Message_Content)(nil),        // 10: messages_service.messages.v1.Message.Content
+	(*Content)(nil),                // 10: messages_service.messages.v1.Content
 	(*Message)(nil),                // 11: messages_service.messages.v1.Message
 }
 var file_messages_service_messages_v1_service_proto_depIdxs = []int32{
-	10, // 0: messages_service.messages.v1.SendMessageRequest.content:type_name -> messages_service.messages.v1.Message.Content
+	10, // 0: messages_service.messages.v1.SendMessageRequest.content:type_name -> messages_service.messages.v1.Content
 	11, // 1: messages_service.messages.v1.SendMessageResponse.message:type_name -> messages_service.messages.v1.Message
 	11, // 2: messages_service.messages.v1.GetChatHistoryResponse.messages:type_name -> messages_service.messages.v1.Message
-	11, // 3: messages_service.messages.v1.EditMessageResponse.message:type_name -> messages_service.messages.v1.Message
-	0,  // 4: messages_service.messages.v1.MessagesService.SendMessage:input_type -> messages_service.messages.v1.SendMessageRequest
-	2,  // 5: messages_service.messages.v1.MessagesService.GetChatHistory:input_type -> messages_service.messages.v1.GetChatHistoryRequest
-	4,  // 6: messages_service.messages.v1.MessagesService.GetUnreadCount:input_type -> messages_service.messages.v1.GetUnreadCountRequest
-	6,  // 7: messages_service.messages.v1.MessagesService.EditMessage:input_type -> messages_service.messages.v1.EditMessageRequest
-	8,  // 8: messages_service.messages.v1.MessagesService.DeleteMessage:input_type -> messages_service.messages.v1.DeleteMessageRequest
-	1,  // 9: messages_service.messages.v1.MessagesService.SendMessage:output_type -> messages_service.messages.v1.SendMessageResponse
-	3,  // 10: messages_service.messages.v1.MessagesService.GetChatHistory:output_type -> messages_service.messages.v1.GetChatHistoryResponse
-	5,  // 11: messages_service.messages.v1.MessagesService.GetUnreadCount:output_type -> messages_service.messages.v1.GetUnreadCountResponse
-	7,  // 12: messages_service.messages.v1.MessagesService.EditMessage:output_type -> messages_service.messages.v1.EditMessageResponse
-	9,  // 13: messages_service.messages.v1.MessagesService.DeleteMessage:output_type -> messages_service.messages.v1.DeleteMessageResponse
-	9,  // [9:14] is the sub-list for method output_type
-	4,  // [4:9] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	10, // 3: messages_service.messages.v1.EditMessageRequest.content:type_name -> messages_service.messages.v1.Content
+	11, // 4: messages_service.messages.v1.EditMessageResponse.message:type_name -> messages_service.messages.v1.Message
+	0,  // 5: messages_service.messages.v1.MessagesService.SendMessage:input_type -> messages_service.messages.v1.SendMessageRequest
+	2,  // 6: messages_service.messages.v1.MessagesService.GetChatHistory:input_type -> messages_service.messages.v1.GetChatHistoryRequest
+	4,  // 7: messages_service.messages.v1.MessagesService.GetUnreadCount:input_type -> messages_service.messages.v1.GetUnreadCountRequest
+	6,  // 8: messages_service.messages.v1.MessagesService.EditMessage:input_type -> messages_service.messages.v1.EditMessageRequest
+	8,  // 9: messages_service.messages.v1.MessagesService.DeleteMessage:input_type -> messages_service.messages.v1.DeleteMessageRequest
+	1,  // 10: messages_service.messages.v1.MessagesService.SendMessage:output_type -> messages_service.messages.v1.SendMessageResponse
+	3,  // 11: messages_service.messages.v1.MessagesService.GetChatHistory:output_type -> messages_service.messages.v1.GetChatHistoryResponse
+	5,  // 12: messages_service.messages.v1.MessagesService.GetUnreadCount:output_type -> messages_service.messages.v1.GetUnreadCountResponse
+	7,  // 13: messages_service.messages.v1.MessagesService.EditMessage:output_type -> messages_service.messages.v1.EditMessageResponse
+	9,  // 14: messages_service.messages.v1.MessagesService.DeleteMessage:output_type -> messages_service.messages.v1.DeleteMessageResponse
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_messages_service_messages_v1_service_proto_init() }
@@ -611,6 +613,7 @@ func file_messages_service_messages_v1_service_proto_init() {
 		return
 	}
 	file_messages_service_messages_v1_models_proto_init()
+	file_messages_service_messages_v1_service_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

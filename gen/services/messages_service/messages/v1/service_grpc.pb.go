@@ -30,15 +30,15 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessagesServiceClient interface {
-	// Отправка сообщения (сохранение в MongoDB)
+	// Отправка сообщения
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 	// Получение истории переписки чата
 	GetChatHistory(ctx context.Context, in *GetChatHistoryRequest, opts ...grpc.CallOption) (*GetChatHistoryResponse, error)
-	// Получить количество сообщений в чате после определенного ID (последнего прочитанного)
+	// Получить количество сообщений в чате после определенного ID
 	GetUnreadCount(ctx context.Context, in *GetUnreadCountRequest, opts ...grpc.CallOption) (*GetUnreadCountResponse, error)
-	// Редактирование сообщения (обновляет body и updated_at)
+	// Редактирование сообщения
 	EditMessage(ctx context.Context, in *EditMessageRequest, opts ...grpc.CallOption) (*EditMessageResponse, error)
-	// Удаление сообщения (soft delete через deleted_at)
+	// Удаление сообщения
 	DeleteMessage(ctx context.Context, in *DeleteMessageRequest, opts ...grpc.CallOption) (*DeleteMessageResponse, error)
 }
 
@@ -104,15 +104,15 @@ func (c *messagesServiceClient) DeleteMessage(ctx context.Context, in *DeleteMes
 // All implementations must embed UnimplementedMessagesServiceServer
 // for forward compatibility.
 type MessagesServiceServer interface {
-	// Отправка сообщения (сохранение в MongoDB)
+	// Отправка сообщения
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	// Получение истории переписки чата
 	GetChatHistory(context.Context, *GetChatHistoryRequest) (*GetChatHistoryResponse, error)
-	// Получить количество сообщений в чате после определенного ID (последнего прочитанного)
+	// Получить количество сообщений в чате после определенного ID
 	GetUnreadCount(context.Context, *GetUnreadCountRequest) (*GetUnreadCountResponse, error)
-	// Редактирование сообщения (обновляет body и updated_at)
+	// Редактирование сообщения
 	EditMessage(context.Context, *EditMessageRequest) (*EditMessageResponse, error)
-	// Удаление сообщения (soft delete через deleted_at)
+	// Удаление сообщения
 	DeleteMessage(context.Context, *DeleteMessageRequest) (*DeleteMessageResponse, error)
 	mustEmbedUnimplementedMessagesServiceServer()
 }

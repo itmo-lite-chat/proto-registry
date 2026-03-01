@@ -24,15 +24,15 @@ const (
 
 type User struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Уникальный ID пользователя (UUID)
+	// UUID пользователя
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Отображаемое имя пользователя (Public Name)
+	// Отображаемое имя пользователя
 	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	// Технический логин для аутентификации (уникальный)
+	// Логин для аутентификации
 	Login string `protobuf:"bytes,3,opt,name=login,proto3" json:"login,omitempty"`
 	// Электронная почта пользователя
 	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	// Ссылка на изображение профиля (может отсутствовать)
+	// Ссылка на изображение профиля
 	AvatarUrl *string `protobuf:"bytes,5,opt,name=avatar_url,json=avatarUrl,proto3,oneof" json:"avatar_url,omitempty"`
 	// Дата и время регистрации пользователя
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`

@@ -35,6 +35,110 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Content with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Content) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Content with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in ContentMultiError, or nil if none found.
+func (m *Content) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Content) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	// no validation rules for Body
+
+	// no validation rules for Metadata
+
+	if len(errors) > 0 {
+		return ContentMultiError(errors)
+	}
+
+	return nil
+}
+
+// ContentMultiError is an error wrapping multiple validation errors returned
+// by Content.ValidateAll() if the designated constraints aren't met.
+type ContentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ContentMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ContentMultiError) AllErrors() []error { return m }
+
+// ContentValidationError is the validation error returned by Content.Validate
+// if the designated constraints aren't met.
+type ContentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ContentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ContentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ContentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ContentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ContentValidationError) ErrorName() string { return "ContentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ContentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sContent.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ContentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ContentValidationError{}
+
 // Validate checks the field values on Message with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -56,7 +160,7 @@ func (m *Message) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	// no validation rules for MessageId
 
 	// no validation rules for ChatId
 
@@ -178,9 +282,7 @@ func (m *Message) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for ReplyTo
-
-	// no validation rules for Version
+	// no validation rules for ReplyToId
 
 	if len(errors) > 0 {
 		return MessageMultiError(errors)
@@ -258,109 +360,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = MessageValidationError{}
-
-// Validate checks the field values on Message_Content with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *Message_Content) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on Message_Content with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// Message_ContentMultiError, or nil if none found.
-func (m *Message_Content) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *Message_Content) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Type
-
-	// no validation rules for Body
-
-	// no validation rules for Metadata
-
-	if len(errors) > 0 {
-		return Message_ContentMultiError(errors)
-	}
-
-	return nil
-}
-
-// Message_ContentMultiError is an error wrapping multiple validation errors
-// returned by Message_Content.ValidateAll() if the designated constraints
-// aren't met.
-type Message_ContentMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m Message_ContentMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m Message_ContentMultiError) AllErrors() []error { return m }
-
-// Message_ContentValidationError is the validation error returned by
-// Message_Content.Validate if the designated constraints aren't met.
-type Message_ContentValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e Message_ContentValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e Message_ContentValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e Message_ContentValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e Message_ContentValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e Message_ContentValidationError) ErrorName() string { return "Message_ContentValidationError" }
-
-// Error satisfies the builtin error interface
-func (e Message_ContentValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sMessage_Content.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = Message_ContentValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = Message_ContentValidationError{}
