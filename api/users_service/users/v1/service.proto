@@ -13,8 +13,7 @@ service UsersService {
   // Получение информации о пользователе
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
 
-  // Универсальный метод получения списка пользователей
-  // Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
+  // Получение списка пользователей
   rpc SerchUsers(SerchUsersRequest) returns (SerchUsersResponse);
 }
 

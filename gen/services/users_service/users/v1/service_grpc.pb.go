@@ -32,8 +32,7 @@ type UsersServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// Получение информации о пользователе
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
-	// Универсальный метод получения списка пользователей
-	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
+	// Получение списка пользователей
 	SerchUsers(ctx context.Context, in *SerchUsersRequest, opts ...grpc.CallOption) (*SerchUsersResponse, error)
 }
 
@@ -83,8 +82,7 @@ type UsersServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// Получение информации о пользователе
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
-	// Универсальный метод получения списка пользователей
-	// Поддерживает: массовый запрос по ID, поиск по строке и обычную пагинацию
+	// Получение списка пользователей
 	SerchUsers(context.Context, *SerchUsersRequest) (*SerchUsersResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
