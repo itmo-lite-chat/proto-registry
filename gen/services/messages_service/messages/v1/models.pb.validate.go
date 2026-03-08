@@ -190,8 +190,6 @@ func (m *Metadata) validate(all bool) error {
 
 	// no validation rules for FileSizeBytes
 
-	// no validation rules for Body
-
 	if all {
 		switch v := interface{}(m.GetDuration()).(type) {
 		case interface{ ValidateAll() error }:

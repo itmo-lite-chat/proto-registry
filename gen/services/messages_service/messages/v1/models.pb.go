@@ -152,14 +152,12 @@ type Metadata struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Размер файла
 	FileSizeBytes int32 `protobuf:"varint,1,opt,name=file_size_bytes,json=fileSizeBytes,proto3" json:"file_size_bytes,omitempty"`
-	// Основное содержимое
-	Body string `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
 	// Длительность файла
-	Duration *durationpb.Duration `protobuf:"bytes,3,opt,name=duration,proto3" json:"duration,omitempty"`
+	Duration *durationpb.Duration `protobuf:"bytes,2,opt,name=duration,proto3" json:"duration,omitempty"`
 	// Ширина файла
-	Width int32 `protobuf:"varint,4,opt,name=width,proto3" json:"width,omitempty"`
+	Width int32 `protobuf:"varint,3,opt,name=width,proto3" json:"width,omitempty"`
 	// Высота файла
-	Height        int32 `protobuf:"varint,5,opt,name=height,proto3" json:"height,omitempty"`
+	Height        int32 `protobuf:"varint,4,opt,name=height,proto3" json:"height,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,13 +197,6 @@ func (x *Metadata) GetFileSizeBytes() int32 {
 		return x.FileSizeBytes
 	}
 	return 0
-}
-
-func (x *Metadata) GetBody() string {
-	if x != nil {
-		return x.Body
-	}
-	return ""
 }
 
 func (x *Metadata) GetDuration() *durationpb.Duration {
@@ -345,13 +336,12 @@ const file_messages_service_messages_v1_models_proto_rawDesc = "" +
 	"\aContent\x12=\n" +
 	"\x04type\x18\x01 \x01(\x0e2).messages_service.messages.v1.ContentTypeR\x04type\x12\x12\n" +
 	"\x04body\x18\x02 \x01(\tR\x04body\x12B\n" +
-	"\bmetadata\x18\x03 \x01(\v2&.messages_service.messages.v1.MetadataR\bmetadata\"\xab\x01\n" +
+	"\bmetadata\x18\x03 \x01(\v2&.messages_service.messages.v1.MetadataR\bmetadata\"\x97\x01\n" +
 	"\bMetadata\x12&\n" +
-	"\x0ffile_size_bytes\x18\x01 \x01(\x05R\rfileSizeBytes\x12\x12\n" +
-	"\x04body\x18\x02 \x01(\tR\x04body\x125\n" +
-	"\bduration\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\bduration\x12\x14\n" +
-	"\x05width\x18\x04 \x01(\x05R\x05width\x12\x16\n" +
-	"\x06height\x18\x05 \x01(\x05R\x06height\"\x85\x03\n" +
+	"\x0ffile_size_bytes\x18\x01 \x01(\x05R\rfileSizeBytes\x125\n" +
+	"\bduration\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\bduration\x12\x14\n" +
+	"\x05width\x18\x03 \x01(\x05R\x05width\x12\x16\n" +
+	"\x06height\x18\x04 \x01(\x05R\x06height\"\x85\x03\n" +
 	"\aMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x17\n" +

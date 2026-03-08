@@ -333,8 +333,8 @@ type UpdateLastReadMessageRequest struct {
 	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
 	// UUID пользователя
 	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// UUID сообщения, которое теперь считается последним
-	LastReadMessageId string `protobuf:"bytes,3,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
+	// ID сообщения, которое теперь считается последним
+	LastReadMessageId int64 `protobuf:"varint,3,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -383,11 +383,11 @@ func (x *UpdateLastReadMessageRequest) GetUserId() string {
 	return ""
 }
 
-func (x *UpdateLastReadMessageRequest) GetLastReadMessageId() string {
+func (x *UpdateLastReadMessageRequest) GetLastReadMessageId() int64 {
 	if x != nil {
 		return x.LastReadMessageId
 	}
-	return ""
+	return 0
 }
 
 type UpdateLastReadMessageResponse struct {
@@ -451,7 +451,7 @@ const file_chats_service_chats_v1_service_proto_rawDesc = "" +
 	"\x1cUpdateLastReadMessageRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12/\n" +
-	"\x14last_read_message_id\x18\x03 \x01(\tR\x11lastReadMessageId\"\x1f\n" +
+	"\x14last_read_message_id\x18\x03 \x01(\x03R\x11lastReadMessageId\"\x1f\n" +
 	"\x1dUpdateLastReadMessageResponse2\xd9\x03\n" +
 	"\fChatsService\x12c\n" +
 	"\n" +
