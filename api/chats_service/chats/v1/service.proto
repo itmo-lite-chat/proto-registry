@@ -63,8 +63,8 @@ message UpdateLastReadMessageRequest {
   string chat_id = 1;
   // UUID пользователя
   string user_id = 2;
-  // UUID сообщения, которое теперь считается последним
-  string last_read_message_id = 3;
+  // ID сообщения, которое теперь считается последним
+  int64 last_read_message_id = 3;
 }
 
 message UpdateLastReadMessageResponse {}
