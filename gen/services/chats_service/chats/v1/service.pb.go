@@ -733,6 +733,86 @@ func (x *TouchChatLastMessageResponse) GetChat() *Chat {
 	return nil
 }
 
+type DeleteChatRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatId        string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteChatRequest) Reset() {
+	*x = DeleteChatRequest{}
+	mi := &file_chats_service_chats_v1_service_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteChatRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteChatRequest) ProtoMessage() {}
+
+func (x *DeleteChatRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chats_service_chats_v1_service_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteChatRequest.ProtoReflect.Descriptor instead.
+func (*DeleteChatRequest) Descriptor() ([]byte, []int) {
+	return file_chats_service_chats_v1_service_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DeleteChatRequest) GetChatId() string {
+	if x != nil {
+		return x.ChatId
+	}
+	return ""
+}
+
+type DeleteChatResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteChatResponse) Reset() {
+	*x = DeleteChatResponse{}
+	mi := &file_chats_service_chats_v1_service_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteChatResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteChatResponse) ProtoMessage() {}
+
+func (x *DeleteChatResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_chats_service_chats_v1_service_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteChatResponse.ProtoReflect.Descriptor instead.
+func (*DeleteChatResponse) Descriptor() ([]byte, []int) {
+	return file_chats_service_chats_v1_service_proto_rawDescGZIP(), []int{15}
+}
+
 var File_chats_service_chats_v1_service_proto protoreflect.FileDescriptor
 
 const file_chats_service_chats_v1_service_proto_rawDesc = "" +
@@ -778,7 +858,10 @@ const file_chats_service_chats_v1_service_proto_rawDesc = "" +
 	"\x0flast_message_id\x18\x02 \x01(\x03R\rlastMessageId\x120\n" +
 	"\x14last_message_preview\x18\x03 \x01(\tR\x12lastMessagePreview\"P\n" +
 	"\x1cTouchChatLastMessageResponse\x120\n" +
-	"\x04chat\x18\x01 \x01(\v2\x1c.chats_service.chats.v1.ChatR\x04chat2\xdb\x06\n" +
+	"\x04chat\x18\x01 \x01(\v2\x1c.chats_service.chats.v1.ChatR\x04chat\",\n" +
+	"\x11DeleteChatRequest\x12\x17\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\"\x14\n" +
+	"\x12DeleteChatResponse2\xc0\a\n" +
 	"\fChatsService\x12c\n" +
 	"\n" +
 	"CreateChat\x12).chats_service.chats.v1.CreateChatRequest\x1a*.chats_service.chats.v1.CreateChatResponse\x12\x87\x01\n" +
@@ -787,7 +870,9 @@ const file_chats_service_chats_v1_service_proto_rawDesc = "" +
 	"\x0eGetChatDetails\x12-.chats_service.chats.v1.GetChatDetailsRequest\x1a..chats_service.chats.v1.GetChatDetailsResponse\x12r\n" +
 	"\x0fCheckChatMember\x12..chats_service.chats.v1.CheckChatMemberRequest\x1a/.chats_service.chats.v1.CheckChatMemberResponse\x12\x84\x01\n" +
 	"\x15UpdateLastReadMessage\x124.chats_service.chats.v1.UpdateLastReadMessageRequest\x1a5.chats_service.chats.v1.UpdateLastReadMessageResponse\x12\x81\x01\n" +
-	"\x14TouchChatLastMessage\x123.chats_service.chats.v1.TouchChatLastMessageRequest\x1a4.chats_service.chats.v1.TouchChatLastMessageResponseB\xc0\x01\n" +
+	"\x14TouchChatLastMessage\x123.chats_service.chats.v1.TouchChatLastMessageRequest\x1a4.chats_service.chats.v1.TouchChatLastMessageResponse\x12c\n" +
+	"\n" +
+	"DeleteChat\x12).chats_service.chats.v1.DeleteChatRequest\x1a*.chats_service.chats.v1.DeleteChatResponseB\xc0\x01\n" +
 	"\x1acom.chats_service.chats.v1B\fServiceProtoP\x01Z\x1echats_service/chats/v1;chatsv1\xa2\x02\x03CCX\xaa\x02\x15ChatsService.Chats.V1\xca\x02\x15ChatsService\\Chats\\V1\xe2\x02!ChatsService\\Chats\\V1\\GPBMetadata\xea\x02\x17ChatsService::Chats::V1b\x06proto3"
 
 var (
@@ -802,7 +887,7 @@ func file_chats_service_chats_v1_service_proto_rawDescGZIP() []byte {
 	return file_chats_service_chats_v1_service_proto_rawDescData
 }
 
-var file_chats_service_chats_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_chats_service_chats_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_chats_service_chats_v1_service_proto_goTypes = []any{
 	(*CreateChatRequest)(nil),              // 0: chats_service.chats.v1.CreateChatRequest
 	(*CreateChatResponse)(nil),             // 1: chats_service.chats.v1.CreateChatResponse
@@ -818,20 +903,22 @@ var file_chats_service_chats_v1_service_proto_goTypes = []any{
 	(*UpdateLastReadMessageResponse)(nil),  // 11: chats_service.chats.v1.UpdateLastReadMessageResponse
 	(*TouchChatLastMessageRequest)(nil),    // 12: chats_service.chats.v1.TouchChatLastMessageRequest
 	(*TouchChatLastMessageResponse)(nil),   // 13: chats_service.chats.v1.TouchChatLastMessageResponse
-	(ChatType)(0),                          // 14: chats_service.chats.v1.ChatType
-	(*Chat)(nil),                           // 15: chats_service.chats.v1.Chat
-	(*ChatMember)(nil),                     // 16: chats_service.chats.v1.ChatMember
+	(*DeleteChatRequest)(nil),              // 14: chats_service.chats.v1.DeleteChatRequest
+	(*DeleteChatResponse)(nil),             // 15: chats_service.chats.v1.DeleteChatResponse
+	(ChatType)(0),                          // 16: chats_service.chats.v1.ChatType
+	(*Chat)(nil),                           // 17: chats_service.chats.v1.Chat
+	(*ChatMember)(nil),                     // 18: chats_service.chats.v1.ChatMember
 }
 var file_chats_service_chats_v1_service_proto_depIdxs = []int32{
-	14, // 0: chats_service.chats.v1.CreateChatRequest.type:type_name -> chats_service.chats.v1.ChatType
-	15, // 1: chats_service.chats.v1.CreateChatResponse.chat:type_name -> chats_service.chats.v1.Chat
-	15, // 2: chats_service.chats.v1.GetOrCreatePrivateChatResponse.chat:type_name -> chats_service.chats.v1.Chat
-	16, // 3: chats_service.chats.v1.GetOrCreatePrivateChatResponse.members:type_name -> chats_service.chats.v1.ChatMember
-	15, // 4: chats_service.chats.v1.ListUserChatsResponse.chats:type_name -> chats_service.chats.v1.Chat
-	15, // 5: chats_service.chats.v1.GetChatDetailsResponse.chat:type_name -> chats_service.chats.v1.Chat
-	16, // 6: chats_service.chats.v1.GetChatDetailsResponse.members:type_name -> chats_service.chats.v1.ChatMember
-	16, // 7: chats_service.chats.v1.CheckChatMemberResponse.member:type_name -> chats_service.chats.v1.ChatMember
-	15, // 8: chats_service.chats.v1.TouchChatLastMessageResponse.chat:type_name -> chats_service.chats.v1.Chat
+	16, // 0: chats_service.chats.v1.CreateChatRequest.type:type_name -> chats_service.chats.v1.ChatType
+	17, // 1: chats_service.chats.v1.CreateChatResponse.chat:type_name -> chats_service.chats.v1.Chat
+	17, // 2: chats_service.chats.v1.GetOrCreatePrivateChatResponse.chat:type_name -> chats_service.chats.v1.Chat
+	18, // 3: chats_service.chats.v1.GetOrCreatePrivateChatResponse.members:type_name -> chats_service.chats.v1.ChatMember
+	17, // 4: chats_service.chats.v1.ListUserChatsResponse.chats:type_name -> chats_service.chats.v1.Chat
+	17, // 5: chats_service.chats.v1.GetChatDetailsResponse.chat:type_name -> chats_service.chats.v1.Chat
+	18, // 6: chats_service.chats.v1.GetChatDetailsResponse.members:type_name -> chats_service.chats.v1.ChatMember
+	18, // 7: chats_service.chats.v1.CheckChatMemberResponse.member:type_name -> chats_service.chats.v1.ChatMember
+	17, // 8: chats_service.chats.v1.TouchChatLastMessageResponse.chat:type_name -> chats_service.chats.v1.Chat
 	0,  // 9: chats_service.chats.v1.ChatsService.CreateChat:input_type -> chats_service.chats.v1.CreateChatRequest
 	2,  // 10: chats_service.chats.v1.ChatsService.GetOrCreatePrivateChat:input_type -> chats_service.chats.v1.GetOrCreatePrivateChatRequest
 	4,  // 11: chats_service.chats.v1.ChatsService.ListUserChats:input_type -> chats_service.chats.v1.ListUserChatsRequest
@@ -839,15 +926,17 @@ var file_chats_service_chats_v1_service_proto_depIdxs = []int32{
 	8,  // 13: chats_service.chats.v1.ChatsService.CheckChatMember:input_type -> chats_service.chats.v1.CheckChatMemberRequest
 	10, // 14: chats_service.chats.v1.ChatsService.UpdateLastReadMessage:input_type -> chats_service.chats.v1.UpdateLastReadMessageRequest
 	12, // 15: chats_service.chats.v1.ChatsService.TouchChatLastMessage:input_type -> chats_service.chats.v1.TouchChatLastMessageRequest
-	1,  // 16: chats_service.chats.v1.ChatsService.CreateChat:output_type -> chats_service.chats.v1.CreateChatResponse
-	3,  // 17: chats_service.chats.v1.ChatsService.GetOrCreatePrivateChat:output_type -> chats_service.chats.v1.GetOrCreatePrivateChatResponse
-	5,  // 18: chats_service.chats.v1.ChatsService.ListUserChats:output_type -> chats_service.chats.v1.ListUserChatsResponse
-	7,  // 19: chats_service.chats.v1.ChatsService.GetChatDetails:output_type -> chats_service.chats.v1.GetChatDetailsResponse
-	9,  // 20: chats_service.chats.v1.ChatsService.CheckChatMember:output_type -> chats_service.chats.v1.CheckChatMemberResponse
-	11, // 21: chats_service.chats.v1.ChatsService.UpdateLastReadMessage:output_type -> chats_service.chats.v1.UpdateLastReadMessageResponse
-	13, // 22: chats_service.chats.v1.ChatsService.TouchChatLastMessage:output_type -> chats_service.chats.v1.TouchChatLastMessageResponse
-	16, // [16:23] is the sub-list for method output_type
-	9,  // [9:16] is the sub-list for method input_type
+	14, // 16: chats_service.chats.v1.ChatsService.DeleteChat:input_type -> chats_service.chats.v1.DeleteChatRequest
+	1,  // 17: chats_service.chats.v1.ChatsService.CreateChat:output_type -> chats_service.chats.v1.CreateChatResponse
+	3,  // 18: chats_service.chats.v1.ChatsService.GetOrCreatePrivateChat:output_type -> chats_service.chats.v1.GetOrCreatePrivateChatResponse
+	5,  // 19: chats_service.chats.v1.ChatsService.ListUserChats:output_type -> chats_service.chats.v1.ListUserChatsResponse
+	7,  // 20: chats_service.chats.v1.ChatsService.GetChatDetails:output_type -> chats_service.chats.v1.GetChatDetailsResponse
+	9,  // 21: chats_service.chats.v1.ChatsService.CheckChatMember:output_type -> chats_service.chats.v1.CheckChatMemberResponse
+	11, // 22: chats_service.chats.v1.ChatsService.UpdateLastReadMessage:output_type -> chats_service.chats.v1.UpdateLastReadMessageResponse
+	13, // 23: chats_service.chats.v1.ChatsService.TouchChatLastMessage:output_type -> chats_service.chats.v1.TouchChatLastMessageResponse
+	15, // 24: chats_service.chats.v1.ChatsService.DeleteChat:output_type -> chats_service.chats.v1.DeleteChatResponse
+	17, // [17:25] is the sub-list for method output_type
+	9,  // [9:17] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name
@@ -866,7 +955,7 @@ func file_chats_service_chats_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chats_service_chats_v1_service_proto_rawDesc), len(file_chats_service_chats_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

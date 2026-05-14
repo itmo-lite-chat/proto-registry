@@ -1751,3 +1751,209 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = TouchChatLastMessageResponseValidationError{}
+
+// Validate checks the field values on DeleteChatRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DeleteChatRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteChatRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteChatRequestMultiError, or nil if none found.
+func (m *DeleteChatRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteChatRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ChatId
+
+	if len(errors) > 0 {
+		return DeleteChatRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteChatRequestMultiError is an error wrapping multiple validation errors
+// returned by DeleteChatRequest.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteChatRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteChatRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteChatRequestMultiError) AllErrors() []error { return m }
+
+// DeleteChatRequestValidationError is the validation error returned by
+// DeleteChatRequest.Validate if the designated constraints aren't met.
+type DeleteChatRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteChatRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteChatRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteChatRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteChatRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteChatRequestValidationError) ErrorName() string {
+	return "DeleteChatRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteChatRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteChatRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteChatRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteChatRequestValidationError{}
+
+// Validate checks the field values on DeleteChatResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteChatResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteChatResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteChatResponseMultiError, or nil if none found.
+func (m *DeleteChatResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteChatResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return DeleteChatResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteChatResponseMultiError is an error wrapping multiple validation errors
+// returned by DeleteChatResponse.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteChatResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteChatResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteChatResponseMultiError) AllErrors() []error { return m }
+
+// DeleteChatResponseValidationError is the validation error returned by
+// DeleteChatResponse.Validate if the designated constraints aren't met.
+type DeleteChatResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteChatResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteChatResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteChatResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteChatResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteChatResponseValidationError) ErrorName() string {
+	return "DeleteChatResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteChatResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteChatResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteChatResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteChatResponseValidationError{}

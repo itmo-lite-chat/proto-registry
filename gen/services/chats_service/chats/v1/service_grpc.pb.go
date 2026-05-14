@@ -26,6 +26,7 @@ const (
 	ChatsService_CheckChatMember_FullMethodName        = "/chats_service.chats.v1.ChatsService/CheckChatMember"
 	ChatsService_UpdateLastReadMessage_FullMethodName  = "/chats_service.chats.v1.ChatsService/UpdateLastReadMessage"
 	ChatsService_TouchChatLastMessage_FullMethodName   = "/chats_service.chats.v1.ChatsService/TouchChatLastMessage"
+	ChatsService_DeleteChat_FullMethodName             = "/chats_service.chats.v1.ChatsService/DeleteChat"
 )
 
 // ChatsServiceClient is the client API for ChatsService service.
@@ -39,6 +40,7 @@ type ChatsServiceClient interface {
 	CheckChatMember(ctx context.Context, in *CheckChatMemberRequest, opts ...grpc.CallOption) (*CheckChatMemberResponse, error)
 	UpdateLastReadMessage(ctx context.Context, in *UpdateLastReadMessageRequest, opts ...grpc.CallOption) (*UpdateLastReadMessageResponse, error)
 	TouchChatLastMessage(ctx context.Context, in *TouchChatLastMessageRequest, opts ...grpc.CallOption) (*TouchChatLastMessageResponse, error)
+	DeleteChat(ctx context.Context, in *DeleteChatRequest, opts ...grpc.CallOption) (*DeleteChatResponse, error)
 }
 
 type chatsServiceClient struct {
@@ -119,6 +121,16 @@ func (c *chatsServiceClient) TouchChatLastMessage(ctx context.Context, in *Touch
 	return out, nil
 }
 
+func (c *chatsServiceClient) DeleteChat(ctx context.Context, in *DeleteChatRequest, opts ...grpc.CallOption) (*DeleteChatResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteChatResponse)
+	err := c.cc.Invoke(ctx, ChatsService_DeleteChat_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ChatsServiceServer is the server API for ChatsService service.
 // All implementations must embed UnimplementedChatsServiceServer
 // for forward compatibility.
@@ -130,6 +142,7 @@ type ChatsServiceServer interface {
 	CheckChatMember(context.Context, *CheckChatMemberRequest) (*CheckChatMemberResponse, error)
 	UpdateLastReadMessage(context.Context, *UpdateLastReadMessageRequest) (*UpdateLastReadMessageResponse, error)
 	TouchChatLastMessage(context.Context, *TouchChatLastMessageRequest) (*TouchChatLastMessageResponse, error)
+	DeleteChat(context.Context, *DeleteChatRequest) (*DeleteChatResponse, error)
 	mustEmbedUnimplementedChatsServiceServer()
 }
 
@@ -160,6 +173,9 @@ func (UnimplementedChatsServiceServer) UpdateLastReadMessage(context.Context, *U
 }
 func (UnimplementedChatsServiceServer) TouchChatLastMessage(context.Context, *TouchChatLastMessageRequest) (*TouchChatLastMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TouchChatLastMessage not implemented")
+}
+func (UnimplementedChatsServiceServer) DeleteChat(context.Context, *DeleteChatRequest) (*DeleteChatResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteChat not implemented")
 }
 func (UnimplementedChatsServiceServer) mustEmbedUnimplementedChatsServiceServer() {}
 func (UnimplementedChatsServiceServer) testEmbeddedByValue()                      {}
@@ -308,6 +324,24 @@ func _ChatsService_TouchChatLastMessage_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatsService_DeleteChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteChatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatsServiceServer).DeleteChat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChatsService_DeleteChat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatsServiceServer).DeleteChat(ctx, req.(*DeleteChatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ChatsService_ServiceDesc is the grpc.ServiceDesc for ChatsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +376,10 @@ var ChatsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TouchChatLastMessage",
 			Handler:    _ChatsService_TouchChatLastMessage_Handler,
+		},
+		{
+			MethodName: "DeleteChat",
+			Handler:    _ChatsService_DeleteChat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
