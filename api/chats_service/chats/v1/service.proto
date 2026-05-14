@@ -20,6 +20,8 @@ service ChatsService {
   rpc UpdateLastReadMessage(UpdateLastReadMessageRequest) returns (UpdateLastReadMessageResponse);
 
   rpc TouchChatLastMessage(TouchChatLastMessageRequest) returns (TouchChatLastMessageResponse);
+
+  rpc DeleteChat(DeleteChatRequest) returns (DeleteChatResponse);
 }
 
 message CreateChatRequest {
@@ -88,3 +90,9 @@ message TouchChatLastMessageRequest {
 message TouchChatLastMessageResponse {
   Chat chat = 1;
 }
+
+message DeleteChatRequest {
+  string chat_id = 1;
+}
+
+message DeleteChatResponse {}
