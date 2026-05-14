@@ -88,6 +88,8 @@ func (m *SendMessageRequest) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for SenderId
+
 	if m.ReplyToId != nil {
 		// no validation rules for ReplyToId
 	}
@@ -327,6 +329,12 @@ func (m *GetChatHistoryRequest) validate(all bool) error {
 
 	// no validation rules for ChatId
 
+	// no validation rules for Limit
+
+	if m.BeforeMessageId != nil {
+		// no validation rules for BeforeMessageId
+	}
+
 	if len(errors) > 0 {
 		return GetChatHistoryRequestMultiError(errors)
 	}
@@ -543,6 +551,374 @@ var _ interface {
 	ErrorName() string
 } = GetChatHistoryResponseValidationError{}
 
+// Validate checks the field values on GetLastMessagesRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLastMessagesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLastMessagesRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLastMessagesRequestMultiError, or nil if none found.
+func (m *GetLastMessagesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLastMessagesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetLastMessagesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLastMessagesRequestMultiError is an error wrapping multiple validation
+// errors returned by GetLastMessagesRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetLastMessagesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLastMessagesRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLastMessagesRequestMultiError) AllErrors() []error { return m }
+
+// GetLastMessagesRequestValidationError is the validation error returned by
+// GetLastMessagesRequest.Validate if the designated constraints aren't met.
+type GetLastMessagesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLastMessagesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLastMessagesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLastMessagesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLastMessagesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLastMessagesRequestValidationError) ErrorName() string {
+	return "GetLastMessagesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLastMessagesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLastMessagesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLastMessagesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLastMessagesRequestValidationError{}
+
+// Validate checks the field values on LastMessage with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *LastMessage) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LastMessage with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LastMessageMultiError, or
+// nil if none found.
+func (m *LastMessage) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LastMessage) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ChatId
+
+	if all {
+		switch v := interface{}(m.GetMessage()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, LastMessageValidationError{
+					field:  "Message",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, LastMessageValidationError{
+					field:  "Message",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMessage()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return LastMessageValidationError{
+				field:  "Message",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return LastMessageMultiError(errors)
+	}
+
+	return nil
+}
+
+// LastMessageMultiError is an error wrapping multiple validation errors
+// returned by LastMessage.ValidateAll() if the designated constraints aren't met.
+type LastMessageMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LastMessageMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LastMessageMultiError) AllErrors() []error { return m }
+
+// LastMessageValidationError is the validation error returned by
+// LastMessage.Validate if the designated constraints aren't met.
+type LastMessageValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LastMessageValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LastMessageValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LastMessageValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LastMessageValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LastMessageValidationError) ErrorName() string { return "LastMessageValidationError" }
+
+// Error satisfies the builtin error interface
+func (e LastMessageValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLastMessage.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LastMessageValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LastMessageValidationError{}
+
+// Validate checks the field values on GetLastMessagesResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLastMessagesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLastMessagesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLastMessagesResponseMultiError, or nil if none found.
+func (m *GetLastMessagesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLastMessagesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetLastMessages() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetLastMessagesResponseValidationError{
+						field:  fmt.Sprintf("LastMessages[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetLastMessagesResponseValidationError{
+						field:  fmt.Sprintf("LastMessages[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetLastMessagesResponseValidationError{
+					field:  fmt.Sprintf("LastMessages[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetLastMessagesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLastMessagesResponseMultiError is an error wrapping multiple validation
+// errors returned by GetLastMessagesResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetLastMessagesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLastMessagesResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLastMessagesResponseMultiError) AllErrors() []error { return m }
+
+// GetLastMessagesResponseValidationError is the validation error returned by
+// GetLastMessagesResponse.Validate if the designated constraints aren't met.
+type GetLastMessagesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLastMessagesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLastMessagesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLastMessagesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLastMessagesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLastMessagesResponseValidationError) ErrorName() string {
+	return "GetLastMessagesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLastMessagesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLastMessagesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLastMessagesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLastMessagesResponseValidationError{}
+
 // Validate checks the field values on GetUnreadCountRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -752,6 +1128,487 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUnreadCountResponseValidationError{}
+
+// Validate checks the field values on UnreadCountRequestItem with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UnreadCountRequestItem) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UnreadCountRequestItem with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UnreadCountRequestItemMultiError, or nil if none found.
+func (m *UnreadCountRequestItem) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UnreadCountRequestItem) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ChatId
+
+	// no validation rules for LastReadMessageId
+
+	if len(errors) > 0 {
+		return UnreadCountRequestItemMultiError(errors)
+	}
+
+	return nil
+}
+
+// UnreadCountRequestItemMultiError is an error wrapping multiple validation
+// errors returned by UnreadCountRequestItem.ValidateAll() if the designated
+// constraints aren't met.
+type UnreadCountRequestItemMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UnreadCountRequestItemMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UnreadCountRequestItemMultiError) AllErrors() []error { return m }
+
+// UnreadCountRequestItemValidationError is the validation error returned by
+// UnreadCountRequestItem.Validate if the designated constraints aren't met.
+type UnreadCountRequestItemValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UnreadCountRequestItemValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UnreadCountRequestItemValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UnreadCountRequestItemValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UnreadCountRequestItemValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UnreadCountRequestItemValidationError) ErrorName() string {
+	return "UnreadCountRequestItemValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UnreadCountRequestItemValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUnreadCountRequestItem.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UnreadCountRequestItemValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UnreadCountRequestItemValidationError{}
+
+// Validate checks the field values on GetUnreadCountsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUnreadCountsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUnreadCountsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUnreadCountsRequestMultiError, or nil if none found.
+func (m *GetUnreadCountsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUnreadCountsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetUnreadCountsRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetUnreadCountsRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetUnreadCountsRequestValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetUnreadCountsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUnreadCountsRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUnreadCountsRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUnreadCountsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUnreadCountsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUnreadCountsRequestMultiError) AllErrors() []error { return m }
+
+// GetUnreadCountsRequestValidationError is the validation error returned by
+// GetUnreadCountsRequest.Validate if the designated constraints aren't met.
+type GetUnreadCountsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUnreadCountsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUnreadCountsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUnreadCountsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUnreadCountsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUnreadCountsRequestValidationError) ErrorName() string {
+	return "GetUnreadCountsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUnreadCountsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUnreadCountsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUnreadCountsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUnreadCountsRequestValidationError{}
+
+// Validate checks the field values on UnreadCount with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UnreadCount) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UnreadCount with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UnreadCountMultiError, or
+// nil if none found.
+func (m *UnreadCount) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UnreadCount) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ChatId
+
+	// no validation rules for UnreadCount
+
+	if len(errors) > 0 {
+		return UnreadCountMultiError(errors)
+	}
+
+	return nil
+}
+
+// UnreadCountMultiError is an error wrapping multiple validation errors
+// returned by UnreadCount.ValidateAll() if the designated constraints aren't met.
+type UnreadCountMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UnreadCountMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UnreadCountMultiError) AllErrors() []error { return m }
+
+// UnreadCountValidationError is the validation error returned by
+// UnreadCount.Validate if the designated constraints aren't met.
+type UnreadCountValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UnreadCountValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UnreadCountValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UnreadCountValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UnreadCountValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UnreadCountValidationError) ErrorName() string { return "UnreadCountValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UnreadCountValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUnreadCount.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UnreadCountValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UnreadCountValidationError{}
+
+// Validate checks the field values on GetUnreadCountsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUnreadCountsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUnreadCountsResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUnreadCountsResponseMultiError, or nil if none found.
+func (m *GetUnreadCountsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUnreadCountsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetUnreadCounts() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetUnreadCountsResponseValidationError{
+						field:  fmt.Sprintf("UnreadCounts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetUnreadCountsResponseValidationError{
+						field:  fmt.Sprintf("UnreadCounts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetUnreadCountsResponseValidationError{
+					field:  fmt.Sprintf("UnreadCounts[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetUnreadCountsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUnreadCountsResponseMultiError is an error wrapping multiple validation
+// errors returned by GetUnreadCountsResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetUnreadCountsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUnreadCountsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUnreadCountsResponseMultiError) AllErrors() []error { return m }
+
+// GetUnreadCountsResponseValidationError is the validation error returned by
+// GetUnreadCountsResponse.Validate if the designated constraints aren't met.
+type GetUnreadCountsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUnreadCountsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUnreadCountsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUnreadCountsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUnreadCountsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUnreadCountsResponseValidationError) ErrorName() string {
+	return "GetUnreadCountsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUnreadCountsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUnreadCountsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUnreadCountsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUnreadCountsResponseValidationError{}
 
 // Validate checks the field values on EditMessageRequest with the rules
 // defined in the proto definition for this message. If any rules are

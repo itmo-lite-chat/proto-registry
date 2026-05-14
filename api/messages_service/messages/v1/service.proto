@@ -6,77 +6,95 @@ option go_package = "messages_service/messages/v1;messagesv1";
 import "messages_service/messages/v1/models.proto";
 
 service MessagesService {
-  // Отправка сообщения
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
   
-  // Получение истории переписки чата
   rpc GetChatHistory(GetChatHistoryRequest) returns (GetChatHistoryResponse);
+
+  rpc GetLastMessages(GetLastMessagesRequest) returns (GetLastMessagesResponse);
   
-  // Получить количество сообщений в чате после определенного ID
   rpc GetUnreadCount(GetUnreadCountRequest) returns (GetUnreadCountResponse);
 
-  // Редактирование сообщения
+  rpc GetUnreadCounts(GetUnreadCountsRequest) returns (GetUnreadCountsResponse);
+
   rpc EditMessage(EditMessageRequest) returns (EditMessageResponse);
 
-  // Удаление сообщения
   rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
 
 }
 
 message SendMessageRequest {
-  // UUID чата
   string chat_id = 1;
-  // Контент сообщения
   Content content = 2;
-  // ID сообщения, на которое отвечаем
   optional int64 reply_to_id = 3;
+  string sender_id = 4;
 }
 
 message SendMessageResponse {
-  // Сообщение
   Message message = 1;
 }
 
 message GetChatHistoryRequest {
-  // UUID чата
   string chat_id = 1;
+  int32 limit = 2;
+  optional int64 before_message_id = 3;
 }
 
 message GetChatHistoryResponse {
-  // Список сообщений чата, отсортированный по времени
   repeated Message messages = 1;
 }
 
-message GetUnreadCountRequest {
-  // UUID чата
+message GetLastMessagesRequest {
+  repeated string chat_ids = 1;
+}
+
+message LastMessage {
   string chat_id = 1;
-  // ID последнего прочитанного сообщения
+  Message message = 2;
+}
+
+message GetLastMessagesResponse {
+  repeated LastMessage last_messages = 1;
+}
+
+message GetUnreadCountRequest {
+  string chat_id = 1;
   int64 last_read_message_id = 2;
 }
 
 message GetUnreadCountResponse {
-  // Количество непрочитанных сообщений
   int32 unread_count = 1;
 }
 
+message UnreadCountRequestItem {
+  string chat_id = 1;
+  int64 last_read_message_id = 2;
+}
+
+message GetUnreadCountsRequest {
+  repeated UnreadCountRequestItem items = 1;
+}
+
+message UnreadCount {
+  string chat_id = 1;
+  int32 unread_count = 2;
+}
+
+message GetUnreadCountsResponse {
+  repeated UnreadCount unread_counts = 1;
+}
+
 message EditMessageRequest {
-  // ID редактируемого сообщения
   int64 message_id = 1;
-  // UUID отправителя для проверки прав доступа
   string sender_id = 2; 
-  // Новое содержание сообщения
   Content content = 3;
 }
 
 message EditMessageResponse {
-  // Обновленное сообщение
   Message message = 1;
 }
 
 message DeleteMessageRequest {
-  // ID удаляемого сообщения
   int64 message_id = 1;
-  // UUID пользователя
   string user_id = 2;
 }
 

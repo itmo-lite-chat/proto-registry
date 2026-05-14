@@ -7,64 +7,84 @@ option go_package = "chats_service/chats/v1;chatsv1";
 import "chats_service/chats/v1/models.proto";
 
 service ChatsService {
-  // Создать чат
   rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
 
-  // Получение списка чатов
+  rpc GetOrCreatePrivateChat(GetOrCreatePrivateChatRequest) returns (GetOrCreatePrivateChatResponse);
+
   rpc ListUserChats(ListUserChatsRequest) returns (ListUserChatsResponse);
 
-  // Получение детальной информации о чате и его участниках
   rpc GetChatDetails(GetChatDetailsRequest) returns (GetChatDetailsResponse);
 
-  // Метод для обновления статуса прочитанного
+  rpc CheckChatMember(CheckChatMemberRequest) returns (CheckChatMemberResponse);
+
   rpc UpdateLastReadMessage(UpdateLastReadMessageRequest) returns (UpdateLastReadMessageResponse);
+
+  rpc TouchChatLastMessage(TouchChatLastMessageRequest) returns (TouchChatLastMessageResponse);
 }
 
 message CreateChatRequest {
-  // Тип создаваемого чата
   ChatType type = 1;
-  // UUID пользователей
   repeated string participant_ids = 2;
-  // Название чата (обязательно для групп)
   optional string title = 3;
-  // UUID пользователя, который создает чат
   string owner_id = 4;
 }
 
 message CreateChatResponse {
-  // Созданный чат
   Chat chat = 1;
 }
 
+message GetOrCreatePrivateChatRequest {
+  string owner_id = 1;
+  string participant_id = 2;
+}
+
+message GetOrCreatePrivateChatResponse {
+  Chat chat = 1;
+  repeated ChatMember members = 2;
+  bool created = 3;
+}
+
 message ListUserChatsRequest {
-  // UUID пользователя
   string user_id = 1;
 }
 
 message ListUserChatsResponse {
-  // Список всех чатов пользователя
   repeated Chat chats = 1;
 }
 
 message GetChatDetailsRequest {
-  // UUID чата
   string chat_id = 1;
 }
 
 message GetChatDetailsResponse {
-  // Чат
   Chat chat = 1;
-  // Список участников чата
   repeated ChatMember members = 2;
 }
 
-message UpdateLastReadMessageRequest {
-  // UUID чата
+message CheckChatMemberRequest {
   string chat_id = 1;
-  // UUID пользователя
   string user_id = 2;
-  // ID сообщения, которое теперь считается последним
+}
+
+message CheckChatMemberResponse {
+  bool is_member = 1;
+  ChatMember member = 2;
+}
+
+message UpdateLastReadMessageRequest {
+  string chat_id = 1;
+  string user_id = 2;
   int64 last_read_message_id = 3;
 }
 
 message UpdateLastReadMessageResponse {}
+
+message TouchChatLastMessageRequest {
+  string chat_id = 1;
+  int64 last_message_id = 2;
+  string last_message_preview = 3;
+}
+
+message TouchChatLastMessageResponse {
+  Chat chat = 1;
+}
