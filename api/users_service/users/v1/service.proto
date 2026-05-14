@@ -7,62 +7,89 @@ option go_package = "users_service/users/v1;usersv1";
 import "users_service/users/v1/models.proto";
 
 service UsersService {
-  // Создание пользователя
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 
-  // Получение информации о пользователе
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
 
-  // Получение списка пользователей
-  rpc SerchUsers(SerchUsersRequest) returns (SerchUsersResponse);
+  rpc GetUsersByIDs(GetUsersByIDsRequest) returns (GetUsersByIDsResponse);
+
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
+
+  rpc GetOrCreateUserByLogin(GetOrCreateUserByLoginRequest) returns (GetOrCreateUserByLoginResponse);
+}
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
 }
 
 message CreateUserRequest {
-  // Имя пользователя
   string username = 1;
-  // Логин для входа в систему
   string login = 2;
-  // Email пользователя
   string email = 3;
-  // Ссылка на изображение профиля
   optional string avatar_url = 4;
 }
 
 message CreateUserResponse {
-  // Пользователь
   User user = 1;
 }
 
 message GetUserByIDRequest {
-  // UUID пользователя
   string user_id = 1; 
 }
 
 message GetUserByIDResponse {
-  // Данные пользователя
   User user = 1;
 }
 
-message SerchUsersRequest {
-  // Поиск по подстроке (login или username) — полнотекстовый
-  string query = 1;
-  
-  // Получение конкретных пользователей по списку их UUID
-  repeated string user_ids = 2;
-  
-  // Точный поиск по логину
-  string login = 3;
+message GetUsersByIDsRequest {
+  repeated string user_ids = 1;
+}
 
-  // Смещение для пагинации
+message GetUsersByIDsResponse {
+  repeated User users = 1;
+}
+
+message SearchUsersRequest {
+  string query = 1;
+  repeated string user_ids = 2;
+  string login = 3;
   int32 offset = 4;
-  // Количество записей на страницу
   int32 limit = 5;
 }
 
-message SerchUsersResponse {
-  // Список найденных пользователей
+message SearchUsersResponse {
   repeated User users = 1;
-  
-  // Общее количество записей, подходящих под фильтр
   int32 count = 2;
+}
+
+message GetOrCreateUserByLoginRequest {
+  string login = 1;
+  string username = 2;
+  string email = 3;
+  optional string avatar_url = 4;
+}
+
+message GetOrCreateUserByLoginResponse {
+  User user = 1;
+  bool created = 2;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  User user = 1;
+  string token = 2;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  User user = 1;
 }

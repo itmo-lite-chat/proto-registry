@@ -19,26 +19,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MessagesService_SendMessage_FullMethodName    = "/messages_service.messages.v1.MessagesService/SendMessage"
-	MessagesService_GetChatHistory_FullMethodName = "/messages_service.messages.v1.MessagesService/GetChatHistory"
-	MessagesService_GetUnreadCount_FullMethodName = "/messages_service.messages.v1.MessagesService/GetUnreadCount"
-	MessagesService_EditMessage_FullMethodName    = "/messages_service.messages.v1.MessagesService/EditMessage"
-	MessagesService_DeleteMessage_FullMethodName  = "/messages_service.messages.v1.MessagesService/DeleteMessage"
+	MessagesService_SendMessage_FullMethodName     = "/messages_service.messages.v1.MessagesService/SendMessage"
+	MessagesService_GetChatHistory_FullMethodName  = "/messages_service.messages.v1.MessagesService/GetChatHistory"
+	MessagesService_GetLastMessages_FullMethodName = "/messages_service.messages.v1.MessagesService/GetLastMessages"
+	MessagesService_GetUnreadCount_FullMethodName  = "/messages_service.messages.v1.MessagesService/GetUnreadCount"
+	MessagesService_GetUnreadCounts_FullMethodName = "/messages_service.messages.v1.MessagesService/GetUnreadCounts"
+	MessagesService_EditMessage_FullMethodName     = "/messages_service.messages.v1.MessagesService/EditMessage"
+	MessagesService_DeleteMessage_FullMethodName   = "/messages_service.messages.v1.MessagesService/DeleteMessage"
 )
 
 // MessagesServiceClient is the client API for MessagesService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessagesServiceClient interface {
-	// Отправка сообщения
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
-	// Получение истории переписки чата
 	GetChatHistory(ctx context.Context, in *GetChatHistoryRequest, opts ...grpc.CallOption) (*GetChatHistoryResponse, error)
-	// Получить количество сообщений в чате после определенного ID
+	GetLastMessages(ctx context.Context, in *GetLastMessagesRequest, opts ...grpc.CallOption) (*GetLastMessagesResponse, error)
 	GetUnreadCount(ctx context.Context, in *GetUnreadCountRequest, opts ...grpc.CallOption) (*GetUnreadCountResponse, error)
-	// Редактирование сообщения
+	GetUnreadCounts(ctx context.Context, in *GetUnreadCountsRequest, opts ...grpc.CallOption) (*GetUnreadCountsResponse, error)
 	EditMessage(ctx context.Context, in *EditMessageRequest, opts ...grpc.CallOption) (*EditMessageResponse, error)
-	// Удаление сообщения
 	DeleteMessage(ctx context.Context, in *DeleteMessageRequest, opts ...grpc.CallOption) (*DeleteMessageResponse, error)
 }
 
@@ -70,10 +69,30 @@ func (c *messagesServiceClient) GetChatHistory(ctx context.Context, in *GetChatH
 	return out, nil
 }
 
+func (c *messagesServiceClient) GetLastMessages(ctx context.Context, in *GetLastMessagesRequest, opts ...grpc.CallOption) (*GetLastMessagesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetLastMessagesResponse)
+	err := c.cc.Invoke(ctx, MessagesService_GetLastMessages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *messagesServiceClient) GetUnreadCount(ctx context.Context, in *GetUnreadCountRequest, opts ...grpc.CallOption) (*GetUnreadCountResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUnreadCountResponse)
 	err := c.cc.Invoke(ctx, MessagesService_GetUnreadCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messagesServiceClient) GetUnreadCounts(ctx context.Context, in *GetUnreadCountsRequest, opts ...grpc.CallOption) (*GetUnreadCountsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUnreadCountsResponse)
+	err := c.cc.Invoke(ctx, MessagesService_GetUnreadCounts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -104,15 +123,12 @@ func (c *messagesServiceClient) DeleteMessage(ctx context.Context, in *DeleteMes
 // All implementations must embed UnimplementedMessagesServiceServer
 // for forward compatibility.
 type MessagesServiceServer interface {
-	// Отправка сообщения
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
-	// Получение истории переписки чата
 	GetChatHistory(context.Context, *GetChatHistoryRequest) (*GetChatHistoryResponse, error)
-	// Получить количество сообщений в чате после определенного ID
+	GetLastMessages(context.Context, *GetLastMessagesRequest) (*GetLastMessagesResponse, error)
 	GetUnreadCount(context.Context, *GetUnreadCountRequest) (*GetUnreadCountResponse, error)
-	// Редактирование сообщения
+	GetUnreadCounts(context.Context, *GetUnreadCountsRequest) (*GetUnreadCountsResponse, error)
 	EditMessage(context.Context, *EditMessageRequest) (*EditMessageResponse, error)
-	// Удаление сообщения
 	DeleteMessage(context.Context, *DeleteMessageRequest) (*DeleteMessageResponse, error)
 	mustEmbedUnimplementedMessagesServiceServer()
 }
@@ -130,8 +146,14 @@ func (UnimplementedMessagesServiceServer) SendMessage(context.Context, *SendMess
 func (UnimplementedMessagesServiceServer) GetChatHistory(context.Context, *GetChatHistoryRequest) (*GetChatHistoryResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetChatHistory not implemented")
 }
+func (UnimplementedMessagesServiceServer) GetLastMessages(context.Context, *GetLastMessagesRequest) (*GetLastMessagesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetLastMessages not implemented")
+}
 func (UnimplementedMessagesServiceServer) GetUnreadCount(context.Context, *GetUnreadCountRequest) (*GetUnreadCountResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUnreadCount not implemented")
+}
+func (UnimplementedMessagesServiceServer) GetUnreadCounts(context.Context, *GetUnreadCountsRequest) (*GetUnreadCountsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUnreadCounts not implemented")
 }
 func (UnimplementedMessagesServiceServer) EditMessage(context.Context, *EditMessageRequest) (*EditMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditMessage not implemented")
@@ -196,6 +218,24 @@ func _MessagesService_GetChatHistory_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessagesService_GetLastMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLastMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagesServiceServer).GetLastMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessagesService_GetLastMessages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagesServiceServer).GetLastMessages(ctx, req.(*GetLastMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MessagesService_GetUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUnreadCountRequest)
 	if err := dec(in); err != nil {
@@ -210,6 +250,24 @@ func _MessagesService_GetUnreadCount_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessagesServiceServer).GetUnreadCount(ctx, req.(*GetUnreadCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MessagesService_GetUnreadCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUnreadCountsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagesServiceServer).GetUnreadCounts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessagesService_GetUnreadCounts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagesServiceServer).GetUnreadCounts(ctx, req.(*GetUnreadCountsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -266,8 +324,16 @@ var MessagesService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MessagesService_GetChatHistory_Handler,
 		},
 		{
+			MethodName: "GetLastMessages",
+			Handler:    _MessagesService_GetLastMessages_Handler,
+		},
+		{
 			MethodName: "GetUnreadCount",
 			Handler:    _MessagesService_GetUnreadCount_Handler,
+		},
+		{
+			MethodName: "GetUnreadCounts",
+			Handler:    _MessagesService_GetUnreadCounts_Handler,
 		},
 		{
 			MethodName: "EditMessage",

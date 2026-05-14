@@ -19,24 +19,26 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ChatsService_CreateChat_FullMethodName            = "/chats_service.chats.v1.ChatsService/CreateChat"
-	ChatsService_ListUserChats_FullMethodName         = "/chats_service.chats.v1.ChatsService/ListUserChats"
-	ChatsService_GetChatDetails_FullMethodName        = "/chats_service.chats.v1.ChatsService/GetChatDetails"
-	ChatsService_UpdateLastReadMessage_FullMethodName = "/chats_service.chats.v1.ChatsService/UpdateLastReadMessage"
+	ChatsService_CreateChat_FullMethodName             = "/chats_service.chats.v1.ChatsService/CreateChat"
+	ChatsService_GetOrCreatePrivateChat_FullMethodName = "/chats_service.chats.v1.ChatsService/GetOrCreatePrivateChat"
+	ChatsService_ListUserChats_FullMethodName          = "/chats_service.chats.v1.ChatsService/ListUserChats"
+	ChatsService_GetChatDetails_FullMethodName         = "/chats_service.chats.v1.ChatsService/GetChatDetails"
+	ChatsService_CheckChatMember_FullMethodName        = "/chats_service.chats.v1.ChatsService/CheckChatMember"
+	ChatsService_UpdateLastReadMessage_FullMethodName  = "/chats_service.chats.v1.ChatsService/UpdateLastReadMessage"
+	ChatsService_TouchChatLastMessage_FullMethodName   = "/chats_service.chats.v1.ChatsService/TouchChatLastMessage"
 )
 
 // ChatsServiceClient is the client API for ChatsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatsServiceClient interface {
-	// Создать чат
 	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error)
-	// Получение списка чатов
+	GetOrCreatePrivateChat(ctx context.Context, in *GetOrCreatePrivateChatRequest, opts ...grpc.CallOption) (*GetOrCreatePrivateChatResponse, error)
 	ListUserChats(ctx context.Context, in *ListUserChatsRequest, opts ...grpc.CallOption) (*ListUserChatsResponse, error)
-	// Получение детальной информации о чате и его участниках
 	GetChatDetails(ctx context.Context, in *GetChatDetailsRequest, opts ...grpc.CallOption) (*GetChatDetailsResponse, error)
-	// Метод для обновления статуса прочитанного
+	CheckChatMember(ctx context.Context, in *CheckChatMemberRequest, opts ...grpc.CallOption) (*CheckChatMemberResponse, error)
 	UpdateLastReadMessage(ctx context.Context, in *UpdateLastReadMessageRequest, opts ...grpc.CallOption) (*UpdateLastReadMessageResponse, error)
+	TouchChatLastMessage(ctx context.Context, in *TouchChatLastMessageRequest, opts ...grpc.CallOption) (*TouchChatLastMessageResponse, error)
 }
 
 type chatsServiceClient struct {
@@ -51,6 +53,16 @@ func (c *chatsServiceClient) CreateChat(ctx context.Context, in *CreateChatReque
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateChatResponse)
 	err := c.cc.Invoke(ctx, ChatsService_CreateChat_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatsServiceClient) GetOrCreatePrivateChat(ctx context.Context, in *GetOrCreatePrivateChatRequest, opts ...grpc.CallOption) (*GetOrCreatePrivateChatResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrCreatePrivateChatResponse)
+	err := c.cc.Invoke(ctx, ChatsService_GetOrCreatePrivateChat_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +89,16 @@ func (c *chatsServiceClient) GetChatDetails(ctx context.Context, in *GetChatDeta
 	return out, nil
 }
 
+func (c *chatsServiceClient) CheckChatMember(ctx context.Context, in *CheckChatMemberRequest, opts ...grpc.CallOption) (*CheckChatMemberResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckChatMemberResponse)
+	err := c.cc.Invoke(ctx, ChatsService_CheckChatMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *chatsServiceClient) UpdateLastReadMessage(ctx context.Context, in *UpdateLastReadMessageRequest, opts ...grpc.CallOption) (*UpdateLastReadMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateLastReadMessageResponse)
@@ -87,18 +109,27 @@ func (c *chatsServiceClient) UpdateLastReadMessage(ctx context.Context, in *Upda
 	return out, nil
 }
 
+func (c *chatsServiceClient) TouchChatLastMessage(ctx context.Context, in *TouchChatLastMessageRequest, opts ...grpc.CallOption) (*TouchChatLastMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TouchChatLastMessageResponse)
+	err := c.cc.Invoke(ctx, ChatsService_TouchChatLastMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ChatsServiceServer is the server API for ChatsService service.
 // All implementations must embed UnimplementedChatsServiceServer
 // for forward compatibility.
 type ChatsServiceServer interface {
-	// Создать чат
 	CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error)
-	// Получение списка чатов
+	GetOrCreatePrivateChat(context.Context, *GetOrCreatePrivateChatRequest) (*GetOrCreatePrivateChatResponse, error)
 	ListUserChats(context.Context, *ListUserChatsRequest) (*ListUserChatsResponse, error)
-	// Получение детальной информации о чате и его участниках
 	GetChatDetails(context.Context, *GetChatDetailsRequest) (*GetChatDetailsResponse, error)
-	// Метод для обновления статуса прочитанного
+	CheckChatMember(context.Context, *CheckChatMemberRequest) (*CheckChatMemberResponse, error)
 	UpdateLastReadMessage(context.Context, *UpdateLastReadMessageRequest) (*UpdateLastReadMessageResponse, error)
+	TouchChatLastMessage(context.Context, *TouchChatLastMessageRequest) (*TouchChatLastMessageResponse, error)
 	mustEmbedUnimplementedChatsServiceServer()
 }
 
@@ -112,14 +143,23 @@ type UnimplementedChatsServiceServer struct{}
 func (UnimplementedChatsServiceServer) CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateChat not implemented")
 }
+func (UnimplementedChatsServiceServer) GetOrCreatePrivateChat(context.Context, *GetOrCreatePrivateChatRequest) (*GetOrCreatePrivateChatResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOrCreatePrivateChat not implemented")
+}
 func (UnimplementedChatsServiceServer) ListUserChats(context.Context, *ListUserChatsRequest) (*ListUserChatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUserChats not implemented")
 }
 func (UnimplementedChatsServiceServer) GetChatDetails(context.Context, *GetChatDetailsRequest) (*GetChatDetailsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetChatDetails not implemented")
 }
+func (UnimplementedChatsServiceServer) CheckChatMember(context.Context, *CheckChatMemberRequest) (*CheckChatMemberResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CheckChatMember not implemented")
+}
 func (UnimplementedChatsServiceServer) UpdateLastReadMessage(context.Context, *UpdateLastReadMessageRequest) (*UpdateLastReadMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateLastReadMessage not implemented")
+}
+func (UnimplementedChatsServiceServer) TouchChatLastMessage(context.Context, *TouchChatLastMessageRequest) (*TouchChatLastMessageResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TouchChatLastMessage not implemented")
 }
 func (UnimplementedChatsServiceServer) mustEmbedUnimplementedChatsServiceServer() {}
 func (UnimplementedChatsServiceServer) testEmbeddedByValue()                      {}
@@ -160,6 +200,24 @@ func _ChatsService_CreateChat_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatsService_GetOrCreatePrivateChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrCreatePrivateChatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatsServiceServer).GetOrCreatePrivateChat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChatsService_GetOrCreatePrivateChat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatsServiceServer).GetOrCreatePrivateChat(ctx, req.(*GetOrCreatePrivateChatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ChatsService_ListUserChats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListUserChatsRequest)
 	if err := dec(in); err != nil {
@@ -196,6 +254,24 @@ func _ChatsService_GetChatDetails_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatsService_CheckChatMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckChatMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatsServiceServer).CheckChatMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChatsService_CheckChatMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatsServiceServer).CheckChatMember(ctx, req.(*CheckChatMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ChatsService_UpdateLastReadMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateLastReadMessageRequest)
 	if err := dec(in); err != nil {
@@ -214,6 +290,24 @@ func _ChatsService_UpdateLastReadMessage_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatsService_TouchChatLastMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TouchChatLastMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatsServiceServer).TouchChatLastMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChatsService_TouchChatLastMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatsServiceServer).TouchChatLastMessage(ctx, req.(*TouchChatLastMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ChatsService_ServiceDesc is the grpc.ServiceDesc for ChatsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -226,6 +320,10 @@ var ChatsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ChatsService_CreateChat_Handler,
 		},
 		{
+			MethodName: "GetOrCreatePrivateChat",
+			Handler:    _ChatsService_GetOrCreatePrivateChat_Handler,
+		},
+		{
 			MethodName: "ListUserChats",
 			Handler:    _ChatsService_ListUserChats_Handler,
 		},
@@ -234,8 +332,16 @@ var ChatsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ChatsService_GetChatDetails_Handler,
 		},
 		{
+			MethodName: "CheckChatMember",
+			Handler:    _ChatsService_CheckChatMember_Handler,
+		},
+		{
 			MethodName: "UpdateLastReadMessage",
 			Handler:    _ChatsService_UpdateLastReadMessage_Handler,
+		},
+		{
+			MethodName: "TouchChatLastMessage",
+			Handler:    _ChatsService_TouchChatLastMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

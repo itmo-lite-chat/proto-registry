@@ -22,13 +22,11 @@ const (
 )
 
 type SendMessageRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// UUID чата
-	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	// Контент сообщения
-	Content *Content `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
-	// ID сообщения, на которое отвечаем
-	ReplyToId     *int64 `protobuf:"varint,3,opt,name=reply_to_id,json=replyToId,proto3,oneof" json:"reply_to_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatId        string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	Content       *Content               `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	ReplyToId     *int64                 `protobuf:"varint,3,opt,name=reply_to_id,json=replyToId,proto3,oneof" json:"reply_to_id,omitempty"`
+	SenderId      string                 `protobuf:"bytes,4,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -84,10 +82,16 @@ func (x *SendMessageRequest) GetReplyToId() int64 {
 	return 0
 }
 
+func (x *SendMessageRequest) GetSenderId() string {
+	if x != nil {
+		return x.SenderId
+	}
+	return ""
+}
+
 type SendMessageResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Сообщение
-	Message       *Message `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       *Message               `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,11 +134,12 @@ func (x *SendMessageResponse) GetMessage() *Message {
 }
 
 type GetChatHistoryRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// UUID чата
-	ChatId        string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ChatId          string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	Limit           int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	BeforeMessageId *int64                 `protobuf:"varint,3,opt,name=before_message_id,json=beforeMessageId,proto3,oneof" json:"before_message_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GetChatHistoryRequest) Reset() {
@@ -174,10 +179,23 @@ func (x *GetChatHistoryRequest) GetChatId() string {
 	return ""
 }
 
+func (x *GetChatHistoryRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetChatHistoryRequest) GetBeforeMessageId() int64 {
+	if x != nil && x.BeforeMessageId != nil {
+		return *x.BeforeMessageId
+	}
+	return 0
+}
+
 type GetChatHistoryResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Список сообщений чата, отсортированный по времени
-	Messages      []*Message `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Messages      []*Message             `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -219,19 +237,157 @@ func (x *GetChatHistoryResponse) GetMessages() []*Message {
 	return nil
 }
 
+type GetLastMessagesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatIds       []string               `protobuf:"bytes,1,rep,name=chat_ids,json=chatIds,proto3" json:"chat_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetLastMessagesRequest) Reset() {
+	*x = GetLastMessagesRequest{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetLastMessagesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetLastMessagesRequest) ProtoMessage() {}
+
+func (x *GetLastMessagesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetLastMessagesRequest.ProtoReflect.Descriptor instead.
+func (*GetLastMessagesRequest) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetLastMessagesRequest) GetChatIds() []string {
+	if x != nil {
+		return x.ChatIds
+	}
+	return nil
+}
+
+type LastMessage struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatId        string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	Message       *Message               `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LastMessage) Reset() {
+	*x = LastMessage{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LastMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LastMessage) ProtoMessage() {}
+
+func (x *LastMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LastMessage.ProtoReflect.Descriptor instead.
+func (*LastMessage) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *LastMessage) GetChatId() string {
+	if x != nil {
+		return x.ChatId
+	}
+	return ""
+}
+
+func (x *LastMessage) GetMessage() *Message {
+	if x != nil {
+		return x.Message
+	}
+	return nil
+}
+
+type GetLastMessagesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LastMessages  []*LastMessage         `protobuf:"bytes,1,rep,name=last_messages,json=lastMessages,proto3" json:"last_messages,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetLastMessagesResponse) Reset() {
+	*x = GetLastMessagesResponse{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetLastMessagesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetLastMessagesResponse) ProtoMessage() {}
+
+func (x *GetLastMessagesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetLastMessagesResponse.ProtoReflect.Descriptor instead.
+func (*GetLastMessagesResponse) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetLastMessagesResponse) GetLastMessages() []*LastMessage {
+	if x != nil {
+		return x.LastMessages
+	}
+	return nil
+}
+
 type GetUnreadCountRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// UUID чата
-	ChatId string `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
-	// ID последнего прочитанного сообщения
-	LastReadMessageId int64 `protobuf:"varint,2,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	ChatId            string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	LastReadMessageId int64                  `protobuf:"varint,2,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
 
 func (x *GetUnreadCountRequest) Reset() {
 	*x = GetUnreadCountRequest{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[4]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -243,7 +399,7 @@ func (x *GetUnreadCountRequest) String() string {
 func (*GetUnreadCountRequest) ProtoMessage() {}
 
 func (x *GetUnreadCountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[4]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -256,7 +412,7 @@ func (x *GetUnreadCountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUnreadCountRequest.ProtoReflect.Descriptor instead.
 func (*GetUnreadCountRequest) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{4}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetUnreadCountRequest) GetChatId() string {
@@ -274,16 +430,15 @@ func (x *GetUnreadCountRequest) GetLastReadMessageId() int64 {
 }
 
 type GetUnreadCountResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Количество непрочитанных сообщений
-	UnreadCount   int32 `protobuf:"varint,1,opt,name=unread_count,json=unreadCount,proto3" json:"unread_count,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UnreadCount   int32                  `protobuf:"varint,1,opt,name=unread_count,json=unreadCount,proto3" json:"unread_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUnreadCountResponse) Reset() {
 	*x = GetUnreadCountResponse{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[5]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +450,7 @@ func (x *GetUnreadCountResponse) String() string {
 func (*GetUnreadCountResponse) ProtoMessage() {}
 
 func (x *GetUnreadCountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[5]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +463,7 @@ func (x *GetUnreadCountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUnreadCountResponse.ProtoReflect.Descriptor instead.
 func (*GetUnreadCountResponse) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{5}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetUnreadCountResponse) GetUnreadCount() int32 {
@@ -318,21 +473,210 @@ func (x *GetUnreadCountResponse) GetUnreadCount() int32 {
 	return 0
 }
 
+type UnreadCountRequestItem struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	ChatId            string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	LastReadMessageId int64                  `protobuf:"varint,2,opt,name=last_read_message_id,json=lastReadMessageId,proto3" json:"last_read_message_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *UnreadCountRequestItem) Reset() {
+	*x = UnreadCountRequestItem{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnreadCountRequestItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnreadCountRequestItem) ProtoMessage() {}
+
+func (x *UnreadCountRequestItem) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnreadCountRequestItem.ProtoReflect.Descriptor instead.
+func (*UnreadCountRequestItem) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *UnreadCountRequestItem) GetChatId() string {
+	if x != nil {
+		return x.ChatId
+	}
+	return ""
+}
+
+func (x *UnreadCountRequestItem) GetLastReadMessageId() int64 {
+	if x != nil {
+		return x.LastReadMessageId
+	}
+	return 0
+}
+
+type GetUnreadCountsRequest struct {
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Items         []*UnreadCountRequestItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUnreadCountsRequest) Reset() {
+	*x = GetUnreadCountsRequest{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUnreadCountsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUnreadCountsRequest) ProtoMessage() {}
+
+func (x *GetUnreadCountsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUnreadCountsRequest.ProtoReflect.Descriptor instead.
+func (*GetUnreadCountsRequest) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetUnreadCountsRequest) GetItems() []*UnreadCountRequestItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type UnreadCount struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatId        string                 `protobuf:"bytes,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
+	UnreadCount   int32                  `protobuf:"varint,2,opt,name=unread_count,json=unreadCount,proto3" json:"unread_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnreadCount) Reset() {
+	*x = UnreadCount{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnreadCount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnreadCount) ProtoMessage() {}
+
+func (x *UnreadCount) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnreadCount.ProtoReflect.Descriptor instead.
+func (*UnreadCount) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *UnreadCount) GetChatId() string {
+	if x != nil {
+		return x.ChatId
+	}
+	return ""
+}
+
+func (x *UnreadCount) GetUnreadCount() int32 {
+	if x != nil {
+		return x.UnreadCount
+	}
+	return 0
+}
+
+type GetUnreadCountsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UnreadCounts  []*UnreadCount         `protobuf:"bytes,1,rep,name=unread_counts,json=unreadCounts,proto3" json:"unread_counts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUnreadCountsResponse) Reset() {
+	*x = GetUnreadCountsResponse{}
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUnreadCountsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUnreadCountsResponse) ProtoMessage() {}
+
+func (x *GetUnreadCountsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUnreadCountsResponse.ProtoReflect.Descriptor instead.
+func (*GetUnreadCountsResponse) Descriptor() ([]byte, []int) {
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetUnreadCountsResponse) GetUnreadCounts() []*UnreadCount {
+	if x != nil {
+		return x.UnreadCounts
+	}
+	return nil
+}
+
 type EditMessageRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID редактируемого сообщения
-	MessageId int64 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	// UUID отправителя для проверки прав доступа
-	SenderId string `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	// Новое содержание сообщения
-	Content       *Content `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     int64                  `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	SenderId      string                 `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	Content       *Content               `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EditMessageRequest) Reset() {
 	*x = EditMessageRequest{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[6]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -344,7 +688,7 @@ func (x *EditMessageRequest) String() string {
 func (*EditMessageRequest) ProtoMessage() {}
 
 func (x *EditMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[6]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -357,7 +701,7 @@ func (x *EditMessageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditMessageRequest.ProtoReflect.Descriptor instead.
 func (*EditMessageRequest) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{6}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *EditMessageRequest) GetMessageId() int64 {
@@ -382,16 +726,15 @@ func (x *EditMessageRequest) GetContent() *Content {
 }
 
 type EditMessageResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Обновленное сообщение
-	Message       *Message `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       *Message               `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EditMessageResponse) Reset() {
 	*x = EditMessageResponse{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[7]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +746,7 @@ func (x *EditMessageResponse) String() string {
 func (*EditMessageResponse) ProtoMessage() {}
 
 func (x *EditMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[7]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +759,7 @@ func (x *EditMessageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EditMessageResponse.ProtoReflect.Descriptor instead.
 func (*EditMessageResponse) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{7}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *EditMessageResponse) GetMessage() *Message {
@@ -427,18 +770,16 @@ func (x *EditMessageResponse) GetMessage() *Message {
 }
 
 type DeleteMessageRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// ID удаляемого сообщения
-	MessageId int64 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	// UUID пользователя
-	UserId        string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     int64                  `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteMessageRequest) Reset() {
 	*x = DeleteMessageRequest{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[8]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -450,7 +791,7 @@ func (x *DeleteMessageRequest) String() string {
 func (*DeleteMessageRequest) ProtoMessage() {}
 
 func (x *DeleteMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[8]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +804,7 @@ func (x *DeleteMessageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMessageRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMessageRequest) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{8}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *DeleteMessageRequest) GetMessageId() int64 {
@@ -488,7 +829,7 @@ type DeleteMessageResponse struct {
 
 func (x *DeleteMessageResponse) Reset() {
 	*x = DeleteMessageResponse{}
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[9]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -500,7 +841,7 @@ func (x *DeleteMessageResponse) String() string {
 func (*DeleteMessageResponse) ProtoMessage() {}
 
 func (x *DeleteMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messages_service_messages_v1_service_proto_msgTypes[9]
+	mi := &file_messages_service_messages_v1_service_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -513,30 +854,51 @@ func (x *DeleteMessageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMessageResponse.ProtoReflect.Descriptor instead.
 func (*DeleteMessageResponse) Descriptor() ([]byte, []int) {
-	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{9}
+	return file_messages_service_messages_v1_service_proto_rawDescGZIP(), []int{16}
 }
 
 var File_messages_service_messages_v1_service_proto protoreflect.FileDescriptor
 
 const file_messages_service_messages_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"*messages_service/messages/v1/service.proto\x12\x1cmessages_service.messages.v1\x1a)messages_service/messages/v1/models.proto\"\xa3\x01\n" +
+	"*messages_service/messages/v1/service.proto\x12\x1cmessages_service.messages.v1\x1a)messages_service/messages/v1/models.proto\"\xc0\x01\n" +
 	"\x12SendMessageRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12?\n" +
 	"\acontent\x18\x02 \x01(\v2%.messages_service.messages.v1.ContentR\acontent\x12#\n" +
-	"\vreply_to_id\x18\x03 \x01(\x03H\x00R\treplyToId\x88\x01\x01B\x0e\n" +
+	"\vreply_to_id\x18\x03 \x01(\x03H\x00R\treplyToId\x88\x01\x01\x12\x1b\n" +
+	"\tsender_id\x18\x04 \x01(\tR\bsenderIdB\x0e\n" +
 	"\f_reply_to_id\"V\n" +
 	"\x13SendMessageResponse\x12?\n" +
-	"\amessage\x18\x01 \x01(\v2%.messages_service.messages.v1.MessageR\amessage\"0\n" +
+	"\amessage\x18\x01 \x01(\v2%.messages_service.messages.v1.MessageR\amessage\"\x8d\x01\n" +
 	"\x15GetChatHistoryRequest\x12\x17\n" +
-	"\achat_id\x18\x01 \x01(\tR\x06chatId\"[\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12/\n" +
+	"\x11before_message_id\x18\x03 \x01(\x03H\x00R\x0fbeforeMessageId\x88\x01\x01B\x14\n" +
+	"\x12_before_message_id\"[\n" +
 	"\x16GetChatHistoryResponse\x12A\n" +
-	"\bmessages\x18\x01 \x03(\v2%.messages_service.messages.v1.MessageR\bmessages\"a\n" +
+	"\bmessages\x18\x01 \x03(\v2%.messages_service.messages.v1.MessageR\bmessages\"3\n" +
+	"\x16GetLastMessagesRequest\x12\x19\n" +
+	"\bchat_ids\x18\x01 \x03(\tR\achatIds\"g\n" +
+	"\vLastMessage\x12\x17\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12?\n" +
+	"\amessage\x18\x02 \x01(\v2%.messages_service.messages.v1.MessageR\amessage\"i\n" +
+	"\x17GetLastMessagesResponse\x12N\n" +
+	"\rlast_messages\x18\x01 \x03(\v2).messages_service.messages.v1.LastMessageR\flastMessages\"a\n" +
 	"\x15GetUnreadCountRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12/\n" +
 	"\x14last_read_message_id\x18\x02 \x01(\x03R\x11lastReadMessageId\";\n" +
 	"\x16GetUnreadCountResponse\x12!\n" +
-	"\funread_count\x18\x01 \x01(\x05R\vunreadCount\"\x91\x01\n" +
+	"\funread_count\x18\x01 \x01(\x05R\vunreadCount\"b\n" +
+	"\x16UnreadCountRequestItem\x12\x17\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12/\n" +
+	"\x14last_read_message_id\x18\x02 \x01(\x03R\x11lastReadMessageId\"d\n" +
+	"\x16GetUnreadCountsRequest\x12J\n" +
+	"\x05items\x18\x01 \x03(\v24.messages_service.messages.v1.UnreadCountRequestItemR\x05items\"I\n" +
+	"\vUnreadCount\x12\x17\n" +
+	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12!\n" +
+	"\funread_count\x18\x02 \x01(\x05R\vunreadCount\"i\n" +
+	"\x17GetUnreadCountsResponse\x12N\n" +
+	"\runread_counts\x18\x01 \x03(\v2).messages_service.messages.v1.UnreadCountR\funreadCounts\"\x91\x01\n" +
 	"\x12EditMessageRequest\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x1b\n" +
@@ -548,11 +910,13 @@ const file_messages_service_messages_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"message_id\x18\x01 \x01(\x03R\tmessageId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"\x17\n" +
-	"\x15DeleteMessageResponse2\xed\x04\n" +
+	"\x15DeleteMessageResponse2\xed\x06\n" +
 	"\x0fMessagesService\x12r\n" +
 	"\vSendMessage\x120.messages_service.messages.v1.SendMessageRequest\x1a1.messages_service.messages.v1.SendMessageResponse\x12{\n" +
-	"\x0eGetChatHistory\x123.messages_service.messages.v1.GetChatHistoryRequest\x1a4.messages_service.messages.v1.GetChatHistoryResponse\x12{\n" +
-	"\x0eGetUnreadCount\x123.messages_service.messages.v1.GetUnreadCountRequest\x1a4.messages_service.messages.v1.GetUnreadCountResponse\x12r\n" +
+	"\x0eGetChatHistory\x123.messages_service.messages.v1.GetChatHistoryRequest\x1a4.messages_service.messages.v1.GetChatHistoryResponse\x12~\n" +
+	"\x0fGetLastMessages\x124.messages_service.messages.v1.GetLastMessagesRequest\x1a5.messages_service.messages.v1.GetLastMessagesResponse\x12{\n" +
+	"\x0eGetUnreadCount\x123.messages_service.messages.v1.GetUnreadCountRequest\x1a4.messages_service.messages.v1.GetUnreadCountResponse\x12~\n" +
+	"\x0fGetUnreadCounts\x124.messages_service.messages.v1.GetUnreadCountsRequest\x1a5.messages_service.messages.v1.GetUnreadCountsResponse\x12r\n" +
 	"\vEditMessage\x120.messages_service.messages.v1.EditMessageRequest\x1a1.messages_service.messages.v1.EditMessageResponse\x12x\n" +
 	"\rDeleteMessage\x122.messages_service.messages.v1.DeleteMessageRequest\x1a3.messages_service.messages.v1.DeleteMessageResponseB\xe7\x01\n" +
 	" com.messages_service.messages.v1B\fServiceProtoP\x01Z'messages_service/messages/v1;messagesv1\xa2\x02\x03MMX\xaa\x02\x1bMessagesService.Messages.V1\xca\x02\x1bMessagesService\\Messages\\V1\xe2\x02'MessagesService\\Messages\\V1\\GPBMetadata\xea\x02\x1dMessagesService::Messages::V1b\x06proto3"
@@ -569,42 +933,57 @@ func file_messages_service_messages_v1_service_proto_rawDescGZIP() []byte {
 	return file_messages_service_messages_v1_service_proto_rawDescData
 }
 
-var file_messages_service_messages_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_messages_service_messages_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_messages_service_messages_v1_service_proto_goTypes = []any{
-	(*SendMessageRequest)(nil),     // 0: messages_service.messages.v1.SendMessageRequest
-	(*SendMessageResponse)(nil),    // 1: messages_service.messages.v1.SendMessageResponse
-	(*GetChatHistoryRequest)(nil),  // 2: messages_service.messages.v1.GetChatHistoryRequest
-	(*GetChatHistoryResponse)(nil), // 3: messages_service.messages.v1.GetChatHistoryResponse
-	(*GetUnreadCountRequest)(nil),  // 4: messages_service.messages.v1.GetUnreadCountRequest
-	(*GetUnreadCountResponse)(nil), // 5: messages_service.messages.v1.GetUnreadCountResponse
-	(*EditMessageRequest)(nil),     // 6: messages_service.messages.v1.EditMessageRequest
-	(*EditMessageResponse)(nil),    // 7: messages_service.messages.v1.EditMessageResponse
-	(*DeleteMessageRequest)(nil),   // 8: messages_service.messages.v1.DeleteMessageRequest
-	(*DeleteMessageResponse)(nil),  // 9: messages_service.messages.v1.DeleteMessageResponse
-	(*Content)(nil),                // 10: messages_service.messages.v1.Content
-	(*Message)(nil),                // 11: messages_service.messages.v1.Message
+	(*SendMessageRequest)(nil),      // 0: messages_service.messages.v1.SendMessageRequest
+	(*SendMessageResponse)(nil),     // 1: messages_service.messages.v1.SendMessageResponse
+	(*GetChatHistoryRequest)(nil),   // 2: messages_service.messages.v1.GetChatHistoryRequest
+	(*GetChatHistoryResponse)(nil),  // 3: messages_service.messages.v1.GetChatHistoryResponse
+	(*GetLastMessagesRequest)(nil),  // 4: messages_service.messages.v1.GetLastMessagesRequest
+	(*LastMessage)(nil),             // 5: messages_service.messages.v1.LastMessage
+	(*GetLastMessagesResponse)(nil), // 6: messages_service.messages.v1.GetLastMessagesResponse
+	(*GetUnreadCountRequest)(nil),   // 7: messages_service.messages.v1.GetUnreadCountRequest
+	(*GetUnreadCountResponse)(nil),  // 8: messages_service.messages.v1.GetUnreadCountResponse
+	(*UnreadCountRequestItem)(nil),  // 9: messages_service.messages.v1.UnreadCountRequestItem
+	(*GetUnreadCountsRequest)(nil),  // 10: messages_service.messages.v1.GetUnreadCountsRequest
+	(*UnreadCount)(nil),             // 11: messages_service.messages.v1.UnreadCount
+	(*GetUnreadCountsResponse)(nil), // 12: messages_service.messages.v1.GetUnreadCountsResponse
+	(*EditMessageRequest)(nil),      // 13: messages_service.messages.v1.EditMessageRequest
+	(*EditMessageResponse)(nil),     // 14: messages_service.messages.v1.EditMessageResponse
+	(*DeleteMessageRequest)(nil),    // 15: messages_service.messages.v1.DeleteMessageRequest
+	(*DeleteMessageResponse)(nil),   // 16: messages_service.messages.v1.DeleteMessageResponse
+	(*Content)(nil),                 // 17: messages_service.messages.v1.Content
+	(*Message)(nil),                 // 18: messages_service.messages.v1.Message
 }
 var file_messages_service_messages_v1_service_proto_depIdxs = []int32{
-	10, // 0: messages_service.messages.v1.SendMessageRequest.content:type_name -> messages_service.messages.v1.Content
-	11, // 1: messages_service.messages.v1.SendMessageResponse.message:type_name -> messages_service.messages.v1.Message
-	11, // 2: messages_service.messages.v1.GetChatHistoryResponse.messages:type_name -> messages_service.messages.v1.Message
-	10, // 3: messages_service.messages.v1.EditMessageRequest.content:type_name -> messages_service.messages.v1.Content
-	11, // 4: messages_service.messages.v1.EditMessageResponse.message:type_name -> messages_service.messages.v1.Message
-	0,  // 5: messages_service.messages.v1.MessagesService.SendMessage:input_type -> messages_service.messages.v1.SendMessageRequest
-	2,  // 6: messages_service.messages.v1.MessagesService.GetChatHistory:input_type -> messages_service.messages.v1.GetChatHistoryRequest
-	4,  // 7: messages_service.messages.v1.MessagesService.GetUnreadCount:input_type -> messages_service.messages.v1.GetUnreadCountRequest
-	6,  // 8: messages_service.messages.v1.MessagesService.EditMessage:input_type -> messages_service.messages.v1.EditMessageRequest
-	8,  // 9: messages_service.messages.v1.MessagesService.DeleteMessage:input_type -> messages_service.messages.v1.DeleteMessageRequest
-	1,  // 10: messages_service.messages.v1.MessagesService.SendMessage:output_type -> messages_service.messages.v1.SendMessageResponse
-	3,  // 11: messages_service.messages.v1.MessagesService.GetChatHistory:output_type -> messages_service.messages.v1.GetChatHistoryResponse
-	5,  // 12: messages_service.messages.v1.MessagesService.GetUnreadCount:output_type -> messages_service.messages.v1.GetUnreadCountResponse
-	7,  // 13: messages_service.messages.v1.MessagesService.EditMessage:output_type -> messages_service.messages.v1.EditMessageResponse
-	9,  // 14: messages_service.messages.v1.MessagesService.DeleteMessage:output_type -> messages_service.messages.v1.DeleteMessageResponse
-	10, // [10:15] is the sub-list for method output_type
-	5,  // [5:10] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	17, // 0: messages_service.messages.v1.SendMessageRequest.content:type_name -> messages_service.messages.v1.Content
+	18, // 1: messages_service.messages.v1.SendMessageResponse.message:type_name -> messages_service.messages.v1.Message
+	18, // 2: messages_service.messages.v1.GetChatHistoryResponse.messages:type_name -> messages_service.messages.v1.Message
+	18, // 3: messages_service.messages.v1.LastMessage.message:type_name -> messages_service.messages.v1.Message
+	5,  // 4: messages_service.messages.v1.GetLastMessagesResponse.last_messages:type_name -> messages_service.messages.v1.LastMessage
+	9,  // 5: messages_service.messages.v1.GetUnreadCountsRequest.items:type_name -> messages_service.messages.v1.UnreadCountRequestItem
+	11, // 6: messages_service.messages.v1.GetUnreadCountsResponse.unread_counts:type_name -> messages_service.messages.v1.UnreadCount
+	17, // 7: messages_service.messages.v1.EditMessageRequest.content:type_name -> messages_service.messages.v1.Content
+	18, // 8: messages_service.messages.v1.EditMessageResponse.message:type_name -> messages_service.messages.v1.Message
+	0,  // 9: messages_service.messages.v1.MessagesService.SendMessage:input_type -> messages_service.messages.v1.SendMessageRequest
+	2,  // 10: messages_service.messages.v1.MessagesService.GetChatHistory:input_type -> messages_service.messages.v1.GetChatHistoryRequest
+	4,  // 11: messages_service.messages.v1.MessagesService.GetLastMessages:input_type -> messages_service.messages.v1.GetLastMessagesRequest
+	7,  // 12: messages_service.messages.v1.MessagesService.GetUnreadCount:input_type -> messages_service.messages.v1.GetUnreadCountRequest
+	10, // 13: messages_service.messages.v1.MessagesService.GetUnreadCounts:input_type -> messages_service.messages.v1.GetUnreadCountsRequest
+	13, // 14: messages_service.messages.v1.MessagesService.EditMessage:input_type -> messages_service.messages.v1.EditMessageRequest
+	15, // 15: messages_service.messages.v1.MessagesService.DeleteMessage:input_type -> messages_service.messages.v1.DeleteMessageRequest
+	1,  // 16: messages_service.messages.v1.MessagesService.SendMessage:output_type -> messages_service.messages.v1.SendMessageResponse
+	3,  // 17: messages_service.messages.v1.MessagesService.GetChatHistory:output_type -> messages_service.messages.v1.GetChatHistoryResponse
+	6,  // 18: messages_service.messages.v1.MessagesService.GetLastMessages:output_type -> messages_service.messages.v1.GetLastMessagesResponse
+	8,  // 19: messages_service.messages.v1.MessagesService.GetUnreadCount:output_type -> messages_service.messages.v1.GetUnreadCountResponse
+	12, // 20: messages_service.messages.v1.MessagesService.GetUnreadCounts:output_type -> messages_service.messages.v1.GetUnreadCountsResponse
+	14, // 21: messages_service.messages.v1.MessagesService.EditMessage:output_type -> messages_service.messages.v1.EditMessageResponse
+	16, // 22: messages_service.messages.v1.MessagesService.DeleteMessage:output_type -> messages_service.messages.v1.DeleteMessageResponse
+	16, // [16:23] is the sub-list for method output_type
+	9,  // [9:16] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_messages_service_messages_v1_service_proto_init() }
@@ -614,13 +993,14 @@ func file_messages_service_messages_v1_service_proto_init() {
 	}
 	file_messages_service_messages_v1_models_proto_init()
 	file_messages_service_messages_v1_service_proto_msgTypes[0].OneofWrappers = []any{}
+	file_messages_service_messages_v1_service_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_messages_service_messages_v1_service_proto_rawDesc), len(file_messages_service_messages_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

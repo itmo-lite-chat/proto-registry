@@ -28,30 +28,21 @@ enum MemberRole {
 
 // Чат
 message Chat {
-  // UUID чата
   string chat_id = 1;
-  // Тип чата
   ChatType type = 2;
-  // Заголовок чата (для групп)
   optional string title = 3;
-  // UUID пользователя-создателя
   string owner_id = 4;
-  // Краткий текст последнего сообщения для предпросмотра в списке
   string last_message_preview = 5;
-  // Время создания чата
   google.protobuf.Timestamp created_at = 6;
+  int64 last_message_id = 7;
+  google.protobuf.Timestamp last_message_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
 }
 
-// Учасник чата
 message ChatMember {
-  // UUID чата
   string chat_id = 1;
-  // UUID пользователя
   string user_id = 2;
-  // Уровень доступа пользователя
   MemberRole role = 3;
-  // Время вступления пользователя в чат
   google.protobuf.Timestamp joined_at = 4;
-  // ID последнего прочитанного сообщения этим пользователем
   int64 last_read_message_id = 5;
 }

@@ -19,21 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UsersService_CreateUser_FullMethodName  = "/users_service.users.v1.UsersService/CreateUser"
-	UsersService_GetUserByID_FullMethodName = "/users_service.users.v1.UsersService/GetUserByID"
-	UsersService_SerchUsers_FullMethodName  = "/users_service.users.v1.UsersService/SerchUsers"
+	UsersService_CreateUser_FullMethodName             = "/users_service.users.v1.UsersService/CreateUser"
+	UsersService_GetUserByID_FullMethodName            = "/users_service.users.v1.UsersService/GetUserByID"
+	UsersService_GetUsersByIDs_FullMethodName          = "/users_service.users.v1.UsersService/GetUsersByIDs"
+	UsersService_SearchUsers_FullMethodName            = "/users_service.users.v1.UsersService/SearchUsers"
+	UsersService_GetOrCreateUserByLogin_FullMethodName = "/users_service.users.v1.UsersService/GetOrCreateUserByLogin"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	// Создание пользователя
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	// Получение информации о пользователе
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
-	// Получение списка пользователей
-	SerchUsers(ctx context.Context, in *SerchUsersRequest, opts ...grpc.CallOption) (*SerchUsersResponse, error)
+	GetUsersByIDs(ctx context.Context, in *GetUsersByIDsRequest, opts ...grpc.CallOption) (*GetUsersByIDsResponse, error)
+	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
+	GetOrCreateUserByLogin(ctx context.Context, in *GetOrCreateUserByLoginRequest, opts ...grpc.CallOption) (*GetOrCreateUserByLoginResponse, error)
 }
 
 type usersServiceClient struct {
@@ -64,10 +65,30 @@ func (c *usersServiceClient) GetUserByID(ctx context.Context, in *GetUserByIDReq
 	return out, nil
 }
 
-func (c *usersServiceClient) SerchUsers(ctx context.Context, in *SerchUsersRequest, opts ...grpc.CallOption) (*SerchUsersResponse, error) {
+func (c *usersServiceClient) GetUsersByIDs(ctx context.Context, in *GetUsersByIDsRequest, opts ...grpc.CallOption) (*GetUsersByIDsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SerchUsersResponse)
-	err := c.cc.Invoke(ctx, UsersService_SerchUsers_FullMethodName, in, out, cOpts...)
+	out := new(GetUsersByIDsResponse)
+	err := c.cc.Invoke(ctx, UsersService_GetUsersByIDs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchUsersResponse)
+	err := c.cc.Invoke(ctx, UsersService_SearchUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersServiceClient) GetOrCreateUserByLogin(ctx context.Context, in *GetOrCreateUserByLoginRequest, opts ...grpc.CallOption) (*GetOrCreateUserByLoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrCreateUserByLoginResponse)
+	err := c.cc.Invoke(ctx, UsersService_GetOrCreateUserByLogin_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,12 +99,11 @@ func (c *usersServiceClient) SerchUsers(ctx context.Context, in *SerchUsersReque
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
-	// Создание пользователя
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	// Получение информации о пользователе
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
-	// Получение списка пользователей
-	SerchUsers(context.Context, *SerchUsersRequest) (*SerchUsersResponse, error)
+	GetUsersByIDs(context.Context, *GetUsersByIDsRequest) (*GetUsersByIDsResponse, error)
+	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
+	GetOrCreateUserByLogin(context.Context, *GetOrCreateUserByLoginRequest) (*GetOrCreateUserByLoginResponse, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -100,8 +120,14 @@ func (UnimplementedUsersServiceServer) CreateUser(context.Context, *CreateUserRe
 func (UnimplementedUsersServiceServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserByID not implemented")
 }
-func (UnimplementedUsersServiceServer) SerchUsers(context.Context, *SerchUsersRequest) (*SerchUsersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SerchUsers not implemented")
+func (UnimplementedUsersServiceServer) GetUsersByIDs(context.Context, *GetUsersByIDsRequest) (*GetUsersByIDsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUsersByIDs not implemented")
+}
+func (UnimplementedUsersServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SearchUsers not implemented")
+}
+func (UnimplementedUsersServiceServer) GetOrCreateUserByLogin(context.Context, *GetOrCreateUserByLoginRequest) (*GetOrCreateUserByLoginResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOrCreateUserByLogin not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -160,20 +186,56 @@ func _UsersService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_SerchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SerchUsersRequest)
+func _UsersService_GetUsersByIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersByIDsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).SerchUsers(ctx, in)
+		return srv.(UsersServiceServer).GetUsersByIDs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_SerchUsers_FullMethodName,
+		FullMethod: UsersService_GetUsersByIDs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).SerchUsers(ctx, req.(*SerchUsersRequest))
+		return srv.(UsersServiceServer).GetUsersByIDs(ctx, req.(*GetUsersByIDsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UsersService_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).SearchUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_SearchUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UsersService_GetOrCreateUserByLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrCreateUserByLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).GetOrCreateUserByLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_GetOrCreateUserByLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).GetOrCreateUserByLogin(ctx, req.(*GetOrCreateUserByLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -194,8 +256,156 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UsersService_GetUserByID_Handler,
 		},
 		{
-			MethodName: "SerchUsers",
-			Handler:    _UsersService_SerchUsers_Handler,
+			MethodName: "GetUsersByIDs",
+			Handler:    _UsersService_GetUsersByIDs_Handler,
+		},
+		{
+			MethodName: "SearchUsers",
+			Handler:    _UsersService_SearchUsers_Handler,
+		},
+		{
+			MethodName: "GetOrCreateUserByLogin",
+			Handler:    _UsersService_GetOrCreateUserByLogin_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "users_service/users/v1/service.proto",
+}
+
+const (
+	AuthService_Login_FullMethodName         = "/users_service.users.v1.AuthService/Login"
+	AuthService_ValidateToken_FullMethodName = "/users_service.users.v1.AuthService/ValidateToken"
+)
+
+// AuthServiceClient is the client API for AuthService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type AuthServiceClient interface {
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
+}
+
+type authServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
+	return &authServiceClient{cc}
+}
+
+func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, AuthService_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ValidateTokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_ValidateToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AuthServiceServer is the server API for AuthService service.
+// All implementations must embed UnimplementedAuthServiceServer
+// for forward compatibility.
+type AuthServiceServer interface {
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+	mustEmbedUnimplementedAuthServiceServer()
+}
+
+// UnimplementedAuthServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedAuthServiceServer struct{}
+
+func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAuthServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ValidateToken not implemented")
+}
+func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
+func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServiceServer will
+// result in compilation errors.
+type UnsafeAuthServiceServer interface {
+	mustEmbedUnimplementedAuthServiceServer()
+}
+
+func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
+	// If the following call panics, it indicates UnimplementedAuthServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&AuthService_ServiceDesc, srv)
+}
+
+func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ValidateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ValidateToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ValidateToken(ctx, req.(*ValidateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var AuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "users_service.users.v1.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _AuthService_Login_Handler,
+		},
+		{
+			MethodName: "ValidateToken",
+			Handler:    _AuthService_ValidateToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
